@@ -4,8 +4,8 @@
     "windowsAuthentication": false, 
     "anonymousAuthentication": true, 
     "iisExpress": {
-      "applicationUrl": "http://localhost:60719",
-      "sslPort": 44350
+      "applicationUrl": "http://localhost:51370",
+      "sslPort": 44327
     }
   },
   "profiles": {
@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "BackendAPI": {
+    "NARFO_BE": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",
