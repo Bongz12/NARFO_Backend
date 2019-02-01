@@ -14,6 +14,7 @@ namespace NARFO_BE.Controllers
     public class MembersController : ControllerBase
     {
         private readonly narfoContext _context;
+        List<Members> members = new List<Members>();
 
         public MembersController(narfoContext context)
         {
@@ -29,12 +30,21 @@ namespace NARFO_BE.Controllers
                 _context.SaveChanges();
             }
         }
+        public MembersController(List<Members> members)
+        {
+            this.members = members;
+        }
+
 
         // GET: api/Members
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Members>>> GetMembers()
         {
             return await _context.Members.ToListAsync();
+        }
+        public IEnumerable<Members> GetAllMembers()
+        {
+            return members;
         }
 
         // GET: api/Members/5
