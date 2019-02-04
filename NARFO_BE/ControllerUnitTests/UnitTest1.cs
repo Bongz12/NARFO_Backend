@@ -18,8 +18,8 @@ namespace Tests
         public void GetAllMembers_ShouldReturnAllMembers()
         {
             var testMembers = GetTestMembers();
-            
-            var controller = new MembersController(testMembers);
+            var text = "null";
+            var controller = new MembersController(testMembers, text);
 
             var result = controller.GetAllMembers() as List<Members>;
             Assert.AreEqual(testMembers.Count, result.Count);
