@@ -28,7 +28,6 @@ namespace NARFO_BE
                 memb.firstName = reader["firstname"].ToString();
                 //memb.lastName = reader["lastname"].ToString();
                 memb.username = reader["username"].ToString();
-                //memb.password = reader["password"].ToString();
 
                 return memb.firstName;
 
