@@ -22,7 +22,7 @@ namespace ControllerUnitTests
             var readTest = read.ReadDb();
             //act
             //Assert
-            Assert.AreEqual("admin", readTest);
+            Assert.AreEqual("Johann Heinrich", readTest);
         }
     }
 }

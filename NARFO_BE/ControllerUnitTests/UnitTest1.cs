@@ -15,6 +15,7 @@ namespace Tests
     public class Tests
     {
        
+        [TestCase]
         public void GetAllMembers_ShouldReturnAllMembers()
         {
             var testMembers = GetTestMembers();
