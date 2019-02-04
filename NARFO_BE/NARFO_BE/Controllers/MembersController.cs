@@ -31,7 +31,7 @@ namespace NARFO_BE.Controllers
             }
         }
         
-        public MembersController(List<Members> members,string val)
+        public void ListofMembers(List<Members> members)
         {
             this.members = members;
         }
