@@ -30,11 +30,12 @@ namespace NARFO_BE.Controllers
                 _context.SaveChanges();
             }
         }
-        public MembersController(List<Members> members)
+        
+        public void ListofMembers(List<Members> members)
         {
             this.members = members;
         }
-
+        
 
         // GET: api/Members
         [HttpGet]
