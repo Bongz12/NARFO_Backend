@@ -1,5 +1,5 @@
-using NARFO_BE.Controllers;
-using NARFO_BE.Models;
+using NARFO_API;
+
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
@@ -11,10 +11,7 @@ namespace Tests
 {
     public class Tests
     {
-        private readonly HttpClient _client;
-        private readonly narfoContext _context;
-
-        private EmployeesController econtroller;
+        
 
         /*[TestCase(1, "Jack", "Zulu", "Male", "2000/01/01")]
 

@@ -4,13 +4,13 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NARFO_BE
+namespace NARFO_API
 {
     public class ReadFromDb
     {
         public string ReadDb()
         {
-            string connectionString;
+            /*string connectionString;
             SqlConnection connect;
 
             connectionString = @"Data Source=dev.retrotest.co.za;Initial Catalog=narfo;User ID=group2;Password=jtn8TVNQMW_28esy";
@@ -35,7 +35,9 @@ namespace NARFO_BE
             }
 
             connect.Close();
-            return "Closed";
+            return "Closed";*/
+
+            return "";
         }
     }
 }

@@ -11,9 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NARFO_BE.Models;
+using DataAccess.Models;
 
-namespace NARFO_BE
+
+namespace NARFO_API
 {
     public class Startup
     {

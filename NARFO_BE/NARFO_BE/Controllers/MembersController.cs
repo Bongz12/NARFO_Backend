@@ -2,114 +2,56 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
-using NARFO_BE.Models;
+using NARFO_API;
 
-namespace NARFO_BE.Controllers
+namespace NARFO_API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class MembersController : ControllerBase
+   
+    
+    
+    [Route("Member")]
+    public class MemberController : ControllerBase
     {
-        private readonly narfoContext _context;
+        private readonly narfoContext _db;
+        
 
-        public MembersController(narfoContext context)
+        [HttpGet("get/all")]
+        public async Task<ActionResult<IEnumerable<Members>>> GetMembersAsync()
         {
-            _context = context;
-            if (!_context.Members.Any())
-            {
-                Members newMember = new Members();
-                newMember.LastName = "admin";
-                newMember.Username = "admin";
-                newMember.FirstName = "admin";
-                newMember.Password = "admin";
-                _context.Members.AddAsync(newMember);
-                _context.SaveChanges();
-            }
+            return await _db.Members.ToListAsync();
         }
 
-        // GET: api/Members
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Members>>> GetMembers()
+        [HttpGet("get/{id}")]
+        public async Task<ActionResult<Members>> GetMembersAsync(int id)
         {
-            return await _context.Members.ToListAsync();
+            return await _db.Members.FindAsync(id);
         }
 
-        // GET: api/Members/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Members>> GetMembers(int id)
+        [HttpPost("set")]
+        public async Task<ActionResult<Members>> SetMember(Members newMember)
         {
-            var members = await _context.Members.FindAsync(id);
-
-            if (members == null)
-            {
-                return NotFound();
-            }
-
-            return members;
+           /* newMember.Password = Encript.Encrypt_user(newMember.Password);
+            await _db.Members.AddAsync(newMember);
+            await _db.SaveChangesAsync();*/
+            return null;
         }
 
-        // PUT: api/Members/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMembers(int id, Members members)
+        [HttpPost("login")]
+        public async Task<ActionResult<Members>> LoginMember(Members newMember)
         {
-            if (id != members.Id)
-            {
-                return BadRequest();
-            }
+            // newMember.Password = Encript.Encrypt_user(newMember.Password);
+            /*
+            Members member = _db.Members.Find(newMember.Username);
 
-            _context.Entry(members).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MembersExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            if (member.Password == newMember.Password)
+                return member;
+            */
+            return null;
         }
 
-        // POST: api/Members
-        [HttpPost]
-        public async Task<ActionResult<Members>> PostMembers(Members members)
-        {
-            _context.Members.Add(members);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMembers", new { id = members.Id }, members);
-        }
-
-        // DELETE: api/Members/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Members>> DeleteMembers(int id)
-        {
-            var members = await _context.Members.FindAsync(id);
-            if (members == null)
-            {
-                return NotFound();
-            }
-
-            _context.Members.Remove(members);
-            await _context.SaveChangesAsync();
-
-            return members;
-        }
-
-        private bool MembersExists(int id)
-        {
-            return _context.Members.Any(e => e.Id == id);
-        }
     }
 }

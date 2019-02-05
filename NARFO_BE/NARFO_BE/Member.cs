@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NARFO_BE
+namespace NARFO_API
 {
     public class Member
     {
