@@ -63,6 +63,12 @@ namespace NARFO_BE.Controllers
             return members;
         }
 
+        [HttpGet("get/shai")]
+        public string  getShai()
+        {
+            return encryption.ComputeHash("12345");
+        }
+
        [HttpPost("set")]
        public async Task<ActionResult<_Member>> setMember([FromBody]_Member member)
         {
