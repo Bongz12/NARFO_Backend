@@ -16,7 +16,8 @@ namespace NARFO_BE.Models
         }
 
         public virtual DbSet<Employees> Employees { get; set; }
-        public virtual DbSet<Members> Members { get; set; }
+      
+        public virtual DbSet<_Member> Members { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

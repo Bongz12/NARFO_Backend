@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,11 +18,13 @@ namespace NARFO_BE.Models
         public string Firstname { get; set; }
         public string SURNAME { get; set; }
         public string IDNo { get; set; }
+        [Column("Physical Address")]
         public string Physical_Address { get; set; }
 
         public string Suburb { get; set; }
         public string City { get; set; }
         public string Province { get; set; }
+        [Column("Postal Code")]
         public string Postal_Code { get; set; }
         public string CellNo { get; set; }
 
