@@ -24,21 +24,28 @@ namespace NARFO_BE
 
             return Password.ToString();
         }*/
-        public static byte[] SaltBytes { get; private set; }
+        
+
+
+       public static byte[] SaltBytes { get; private set; }
+        public enum Supported_HA
+        {
+            SHA256
+        }
 
        
-
-        public static string ComputeHash(string plainText, byte[] salt)
+        public static string ComputeHash(string plainText)
         {
-            //var hash = 256;
-            int minSaltLength = 4, maxSaltLength = 16;
+            string value = "shasha";
+            byte[] salt = Encoding.ASCII.GetBytes(value);
+            //int minSaltLength = 4, maxSaltLength = 16;
 
             byte[] saltBytes = null;
             if (salt != null)
             {
                 saltBytes = salt;
             }
-            else
+           /* else
             {
                 Random r = new Random();
                 int SaltLength = r.Next(minSaltLength, maxSaltLength);
@@ -47,7 +54,7 @@ namespace NARFO_BE
                 rng.GetNonZeroBytes(SaltBytes);
                 rng.Dispose();
             }
-
+            */
             byte[] plainData = ASCIIEncoding.UTF8.GetBytes(plainText);
             byte[] plainDataWithSalt = new byte[plainData.Length + SaltBytes.Length];
 
@@ -84,7 +91,7 @@ namespace NARFO_BE
             for (int x = 0; x < saltBytes.Length; x++)
                 saltBytes[x] = hashBytes[hashSize + x];
 
-            string newHash = ComputeHash(plainText, saltBytes);
+            string newHash = ComputeHash(plainText);
 
             return (hashValue == newHash);
         }
