@@ -40,11 +40,7 @@ namespace NARFO_BE
             byte[] salt = Encoding.ASCII.GetBytes(value);
             //int minSaltLength = 4, maxSaltLength = 16;
 
-            byte[] saltBytes = null;
-            if (salt != null)
-            {
-                saltBytes = salt;
-            }
+           
            /* else
             {
                 Random r = new Random();
@@ -56,12 +52,12 @@ namespace NARFO_BE
             }
             */
             byte[] plainData = ASCIIEncoding.UTF8.GetBytes(plainText);
-            byte[] plainDataWithSalt = new byte[plainData.Length + SaltBytes.Length];
+            byte[] plainDataWithSalt = new byte[plainData.Length + salt.Length];
 
             for (int x = 0; x < plainData.Length; x++)
                 plainDataWithSalt[x] = plainData[x];
-            for (int n = 0; n < SaltBytes.Length; n++)
-                plainDataWithSalt[plainData.Length + n] = SaltBytes[n];
+            for (int n = 0; n < salt.Length; n++)
+                plainDataWithSalt[plainData.Length + n] = salt[n];
 
             byte[] hashValue = null;
 
@@ -71,11 +67,11 @@ namespace NARFO_BE
             sha.Dispose();
                    
 
-            byte[] result = new byte[hashValue.Length + SaltBytes.Length];
+            byte[] result = new byte[hashValue.Length + salt.Length];
             for (int x = 0; x < hashValue.Length; x++)
                 result[x] = hashValue[x];
-            for (int n = 0; n < SaltBytes.Length; n++)
-                result[hashValue.Length + n] = SaltBytes[n];
+            for (int n = 0; n < salt.Length; n++)
+                result[hashValue.Length + n] = salt[n];
 
             return Convert.ToBase64String(result);
         }
