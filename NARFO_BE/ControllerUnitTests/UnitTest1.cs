@@ -56,7 +56,7 @@ namespace Tests
             //_context.SaveChanges();
 
             // Request for the Member we just created
-            var response = await _client.GetAsync($"/api/Members/{newMember.Id}");
+            var response = await _client.GetAsync($"/Members/{newMember.Id}");
             // Check if status code is OK
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             // Get JSON  of the hero from response
