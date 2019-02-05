@@ -75,9 +75,10 @@ namespace Tests
         public void GetAllMembers_ShouldReturnAllMembers()
         {
             var testMembers = GetTestMembers();
-            
+
             var controller = new MembersController(_context);
             controller.ListofMembers(testMembers);
+
 
             var result = controller.GetAllMembers() as List<Members>;
             Assert.AreEqual(testMembers.Count, result.Count);
