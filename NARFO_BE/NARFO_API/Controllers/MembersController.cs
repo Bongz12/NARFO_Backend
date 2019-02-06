@@ -11,23 +11,23 @@ namespace NARFO_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Members1Controller : ControllerBase
+    public class MembersController : ControllerBase
     {
         private readonly narfoContext _context;
 
-        public Members1Controller(narfoContext context)
+        public MembersController(narfoContext context)
         {
             _context = context;
         }
 
-        // GET: api/Members1
+        // GET: api/Members
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Members>>> GetMembers()
         {
             return await _context.Members.ToListAsync();
         }
 
-        // GET: api/Members1/5
+        // GET: api/Members/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Members>> GetMembers(string id)
         {
@@ -41,7 +41,7 @@ namespace NARFO_API.Controllers
             return members;
         }
 
-        // PUT: api/Members1/5
+        // PUT: api/Members/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMembers(string id, Members members)
         {
@@ -71,7 +71,7 @@ namespace NARFO_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Members1
+        // POST: api/Members
         [HttpPost]
         public async Task<ActionResult<Members>> PostMembers(Members members)
         {
@@ -95,7 +95,7 @@ namespace NARFO_API.Controllers
             return CreatedAtAction("GetMembers", new { id = members.MemNo }, members);
         }
 
-        // DELETE: api/Members1/5
+        // DELETE: api/Members/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Members>> DeleteMembers(string id)
         {

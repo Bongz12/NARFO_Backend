@@ -13,7 +13,7 @@ namespace DataAccess.Models
         public DateTime? DateSubmitted { get; set; }
         public string FirearmType { get; set; }
         public string Caliber { get; set; }
-        public bool? PostalShoot { get; set; }
+        public bool PostalShoot { get; set; }
         public string Score { get; set; }
     }
 }

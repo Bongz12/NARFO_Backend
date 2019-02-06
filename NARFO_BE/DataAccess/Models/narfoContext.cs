@@ -18,6 +18,7 @@ namespace DataAccess.Models
         public virtual DbSet<Actions> Actions { get; set; }
         public virtual DbSet<ActivityLookup> ActivityLookup { get; set; }
         public virtual DbSet<ActivityRegister> ActivityRegister { get; set; }
+        public virtual DbSet<Address> Address { get; set; }
         public virtual DbSet<ApplicationLookup> ApplicationLookup { get; set; }
         public virtual DbSet<BankDetails> BankDetails { get; set; }
         public virtual DbSet<Branch> Branch { get; set; }
@@ -31,8 +32,10 @@ namespace DataAccess.Models
         public virtual DbSet<EndorsementLookup> EndorsementLookup { get; set; }
         public virtual DbSet<Endorsements> Endorsements { get; set; }
         public virtual DbSet<FirearmType> FirearmType { get; set; }
+        public virtual DbSet<MemActivityStatus> MemActivityStatus { get; set; }
         public virtual DbSet<MemberTypeLookUp> MemberTypeLookUp { get; set; }
         public virtual DbSet<Members> Members { get; set; }
+        public virtual DbSet<Members1> Members1 { get; set; }
         public virtual DbSet<NextNoValue> NextNoValue { get; set; }
         public virtual DbSet<Outlets> Outlets { get; set; }
         public virtual DbSet<PendingRenewal> PendingRenewal { get; set; }
@@ -47,8 +50,8 @@ namespace DataAccess.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-            //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=dev.retrotest.co.za;Initial Catalog=narfo;Persist Security Info=False;User ID=group2;Password=jtn8TVNQMW_28esy;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=dev.retrotest.co.za;Initial Catalog=narfo;Persist Security Info=False;User ID=group2;Password=jtn8TVNQMW_28esy;");
             }
         }
 
@@ -94,9 +97,40 @@ namespace DataAccess.Models
 
                 entity.Property(e => e.FirearmType).HasMaxLength(50);
 
-                entity.Property(e => e.MemNo).HasMaxLength(10);
+                entity.Property(e => e.MemNo)
+                    .IsRequired()
+                    .HasMaxLength(10);
 
                 entity.Property(e => e.Score).HasMaxLength(255);
+            });
+
+            modelBuilder.Entity<Address>(entity =>
+            {
+                entity.Property(e => e.AddressId).HasColumnName("AddressID");
+
+                entity.Property(e => e.City).HasMaxLength(50);
+
+                entity.Property(e => e.MemNo)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.PhysicalAddress)
+                    .HasColumnName("Physical Address")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.PostalCode)
+                    .HasColumnName("Postal Code")
+                    .HasMaxLength(6);
+
+                entity.Property(e => e.Province).HasMaxLength(50);
+
+                entity.Property(e => e.Suburb).HasMaxLength(50);
+
+                entity.HasOne(d => d.MemNoNavigation)
+                    .WithMany(p => p.Address)
+                    .HasForeignKey(d => d.MemNo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Address__MemNo__0B5CAFEA");
             });
 
             modelBuilder.Entity<ApplicationLookup>(entity =>
@@ -332,74 +366,15 @@ namespace DataAccess.Models
                     .ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<MemberTypeLookUp>(entity =>
+            modelBuilder.Entity<MemActivityStatus>(entity =>
             {
-                entity.HasKey(e => e.MemberTypeId);
-
-                entity.Property(e => e.MemberTypeId).HasColumnName("MemberTypeID");
-
-                entity.Property(e => e.MemberType).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<Members>(entity =>
-            {
-                entity.HasKey(e => e.MemNo);
+                entity.Property(e => e.MemActivityStatusId).HasColumnName("MemActivityStatusID");
 
                 entity.Property(e => e.MemNo)
-                    .HasMaxLength(10)
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Branch).HasMaxLength(50);
-
-                entity.Property(e => e.CellNo).HasMaxLength(50);
-
-                entity.Property(e => e.City).HasMaxLength(50);
-
-                entity.Property(e => e.CurrnetAssName).HasMaxLength(100);
-
-                entity.Property(e => e.Email).HasMaxLength(50);
-
-                entity.Property(e => e.Ethicity).HasMaxLength(25);
-
-                entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Firstname).HasMaxLength(50);
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Idno)
-                    .HasColumnName("IDNo")
-                    .HasMaxLength(30);
-
-                entity.Property(e => e.InceptionDate).HasColumnType("datetime");
-
-                entity.Property(e => e.MemType).HasMaxLength(25);
-
-                entity.Property(e => e.MyBonusNo).HasMaxLength(25);
+                    .IsRequired()
+                    .HasMaxLength(10);
 
                 entity.Property(e => e.NoOfFa).HasColumnName("NoOfFA");
-
-                entity.Property(e => e.PhysicalAddress)
-                    .HasColumnName("Physical Address")
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.PostalCode)
-                    .HasColumnName("Postal Code")
-                    .HasMaxLength(6);
-
-                entity.Property(e => e.Province).HasMaxLength(50);
-
-                entity.Property(e => e.SalesMan).HasMaxLength(20);
-
-                entity.Property(e => e.Sex).HasMaxLength(255);
-
-                entity.Property(e => e.Suburb).HasMaxLength(50);
-
-                entity.Property(e => e.Surname)
-                    .HasColumnName("SURNAME")
-                    .HasMaxLength(60);
-
-                entity.Property(e => e.Title).HasMaxLength(6);
 
                 entity.Property(e => e.TypeFahg).HasColumnName("TypeFAHG");
 
@@ -424,6 +399,80 @@ namespace DataAccess.Models
                 entity.Property(e => e.TypeSssa).HasColumnName("TypeSSSA");
 
                 entity.Property(e => e.TypeSssg).HasColumnName("TypeSSSG");
+
+                entity.HasOne(d => d.MemNoNavigation)
+                    .WithMany(p => p.MemActivityStatus)
+                    .HasForeignKey(d => d.MemNo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__MemActivi__MemNo__0D44F85C");
+            });
+
+            modelBuilder.Entity<MemberTypeLookUp>(entity =>
+            {
+                entity.HasKey(e => e.MemberTypeId);
+
+                entity.Property(e => e.MemberTypeId).HasColumnName("MemberTypeID");
+
+                entity.Property(e => e.MemberType).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Members>(entity =>
+            {
+                entity.HasKey(e => e.MemNo)
+                    .HasName("PK__Members__E8C362CD9A89FCBC");
+
+                entity.Property(e => e.MemNo)
+                    .HasMaxLength(10)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Branch).HasMaxLength(50);
+
+                entity.Property(e => e.CellNo).HasMaxLength(50);
+
+                entity.Property(e => e.CurrnetAssName).HasMaxLength(100);
+
+                entity.Property(e => e.Email).HasMaxLength(50);
+
+                entity.Property(e => e.Ethnicity).HasMaxLength(25);
+
+                entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Firstname).HasMaxLength(50);
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Idno)
+                    .HasColumnName("IDNo")
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.InceptionDate).HasColumnType("datetime");
+
+                entity.Property(e => e.MemType).HasMaxLength(25);
+
+                entity.Property(e => e.MyBonusNo).HasMaxLength(25);
+
+                entity.Property(e => e.Sex).HasMaxLength(255);
+
+                entity.Property(e => e.Surname).HasMaxLength(60);
+
+                entity.Property(e => e.Title).HasMaxLength(6);
+
+                entity.Property(e => e.Username).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Members1>(entity =>
+            {
+                entity.ToTable("_Members");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Firstname).HasMaxLength(50);
+
+                entity.Property(e => e.Password).HasMaxLength(50);
+
+                entity.Property(e => e.Surname).HasMaxLength(60);
 
                 entity.Property(e => e.Username).HasMaxLength(50);
             });

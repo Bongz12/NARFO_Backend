@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NARFO_BE\NARFO_API.csproj" />
+    <ProjectReference Include="..\NARFO_API\NARFO_API.csproj" />
   </ItemGroup>
 
 </Project>

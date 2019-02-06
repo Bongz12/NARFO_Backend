@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NARFO_API", "NARFO_BE\NARFO_API.csproj", "{C12FE8B0-2C76-43C3-849D-FF83E3A7D405}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControllerUnitTests", "ControllerUnitTests\ControllerUnitTests.csproj", "{1AEA3B7D-986F-457C-9C3C-07A972722F8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "ConsoleApp1\DataAccess.csproj", "{315B2CCD-D6B6-4FEE-93A6-FC4E2BB50524}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{315B2CCD-D6B6-4FEE-93A6-FC4E2BB50524}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{6DD1BD31-CAF7-41F3-B556-66A08D4D584F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{6DD1BD31-CAF7-41F3-B556-66A08D4D584F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NARFO_API", "NARFO_API\NARFO_API.csproj", "{6733A4FB-53AE-4D5E-8986-D7E2E1E2A94B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C12FE8B0-2C76-43C3-849D-FF83E3A7D405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C12FE8B0-2C76-43C3-849D-FF83E3A7D405}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C12FE8B0-2C76-43C3-849D-FF83E3A7D405}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C12FE8B0-2C76-43C3-849D-FF83E3A7D405}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1AEA3B7D-986F-457C-9C3C-07A972722F8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1AEA3B7D-986F-457C-9C3C-07A972722F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AEA3B7D-986F-457C-9C3C-07A972722F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{6DD1BD31-CAF7-41F3-B556-66A08D4D584F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DD1BD31-CAF7-41F3-B556-66A08D4D584F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DD1BD31-CAF7-41F3-B556-66A08D4D584F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6733A4FB-53AE-4D5E-8986-D7E2E1E2A94B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6733A4FB-53AE-4D5E-8986-D7E2E1E2A94B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6733A4FB-53AE-4D5E-8986-D7E2E1E2A94B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6733A4FB-53AE-4D5E-8986-D7E2E1E2A94B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

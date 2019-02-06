@@ -29,7 +29,7 @@ namespace NARFO_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<narfoContext>(opt =>
-                opt.UseInMemoryDatabase("narfo"));
+                 opt.UseInMemoryDatabase("narfo"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
