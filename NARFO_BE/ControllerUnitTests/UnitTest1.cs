@@ -45,7 +45,7 @@ namespace Tests
         public async Task GetAllMembers_ShouldReturnAllMembers()
         {
             // Create Member object
-            var newMember = new Members { Id = 1, FirstName = "Mike", LastName = " Jack", Username = "MikeJack", Password = "Password1" };
+            var newMember = new _Member { Id = 1, Firstname = "Mike", SURNAME = " Jack", Username = "MikeJack", Password = "Password1" };
 
 
             // Add heroes to database
@@ -65,7 +65,7 @@ namespace Tests
             var heroResponse = JsonConvert.DeserializeObject<Members>(jsonResponse);
             // Check if the Member is the same
             Assert.AreEqual(newMember.Id, heroResponse.Id);
-            Assert.AreEqual(newMember.FirstName, heroResponse.FirstName);
+            Assert.AreEqual(newMember.Firstname, heroResponse.FirstName);
         }
 
 

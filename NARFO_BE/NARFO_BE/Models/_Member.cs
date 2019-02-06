@@ -10,6 +10,7 @@ namespace NARFO_BE.Models
     {
         public int Id { get; set; }
         public string MEMNO { get; set; }
+        public string Password { get; set; }
         public string Branch { get; set; }
         public string SalesMan { get; set; }
         public string Username { get; set; }
