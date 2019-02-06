@@ -45,16 +45,10 @@ namespace Tests
         public async Task GetAllMembers_ShouldReturnAllMembers()
         {
             // Create Member object
-            var newMember = new _Member { Id = 1, Firstname = "Mike", SURNAME = " Jack", Username = "MikeJack", Password = "Password1" };
-
-
+            var newMember = new _Member { Id = 1, Firstname = "Mike", Surname = " Jack", Username = "MikeJack", Password = "Password1" };
             // Add heroes to database
             _context.Members.Add(newMember);
             _context.SaveChanges();
-
-           // _context.Members.Add(newMember);
-            //_context.SaveChanges();
-
             // Request for the Member we just created
             var response = await _client.GetAsync($"/Members/{newMember.Id}");
             // Check if status code is OK
