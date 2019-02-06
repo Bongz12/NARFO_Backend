@@ -47,7 +47,7 @@ namespace NARFO_BE.Controllers
         public async Task<ActionResult <_Member>> Login([FromBody] _Member model)
         {
             
-            _Member user = await _context.Members.FirstOrDefaultAsync(member=>member.Email == model.Email && member.Password == encryption.ComputeHash(model.Password));
+            _Member user = await _context.Members.FirstOrDefaultAsync(member=>member.Email == model.Email && member.Password == encryption.HashPassword(model.Password));
 
             if (user == null)
             {
@@ -116,7 +116,7 @@ namespace NARFO_BE.Controllers
        [HttpPost("set")]
        public async Task<ActionResult<_Member>> setMember([FromBody]_Member member)
         {
-            member.Password = encryption.ComputeHash(member.Password);
+            member.Password = encryption.HashPassword(member.Password);
             await _context.Members.AddAsync(member);
             await _context.SaveChangesAsync();
 
