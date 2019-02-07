@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -8,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
@@ -18,10 +23,10 @@ namespace NARFO_BE.Controllers
     {
         private readonly narfoContext _context;
         List<_Member> members = new List<_Member>();
-       
-
-        public MembersController(narfoContext context)
+        private IConfiguration Config;
+        public MembersController(narfoContext context, IConfiguration config)
         {
+            Config = config;
             _context = context;
             if (!_context.Members.Any()){ _Member newMember = new _Member(); newMember.Surname = "admin";newMember.Username = "admin";newMember.Firstname = "admin"; newMember.Email = "admin@admin.com";
                 _context.Members.AddAsync(newMember);
@@ -33,13 +38,50 @@ namespace NARFO_BE.Controllers
         public void ListofMembers(List<_Member> members) {this.members = members; }
         private ActionResult<_Member> Json(object p) { throw new NotImplementedException(); }
 
+
+        public void ListofMembers(List<_Member> members)
+        {
+            this.members = members;
+        }
+        private string BuildToken(_Member user)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var claims = new[] {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    };
+            var token = new JwtSecurityToken(Config["Jwt:Issuer"],
+              Config["Jwt:Issuer"],claims,
+              expires: DateTime.Now.AddDays(360),
+              signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        //
+
         // POST: /Account/Login
-        [HttpPost("get/login")]
+        [HttpPost("post/login")]
         public async Task<ActionResult <_Member>> Login([FromBody] _Member model)
         {
+
             _Member user = await _context.Members.FirstOrDefaultAsync(member=>member.Email == model.Email && member.Password == encryption.HashPassword(model.Password));
             if (user == null){  return BadRequest(new { status = "Failed", message = "Invalid login" }); }
             else {return Ok(new { status = "Success", member = model });}  
+     _Member user = await _context.Members.FirstOrDefaultAsync(member=>member.Email == model.Email && member.Password == encryption.ComputeHash(model.Password));
+
+            if (user == null)
+            {
+                return BadRequest(new { status = "Failed", message = "Invalid login" });
+            }
+            else {
+                var tokenString = BuildToken(user);
+
+                return Ok(new { status = "Success", token = tokenString });
+            }
+
         }
 
         // GET: Member/Email
@@ -66,15 +108,18 @@ namespace NARFO_BE.Controllers
             return Ok(new { status = "success", members = amembers });//success response
         }
   
-       [HttpPost("set")]
+       [HttpPost("post/set")]
+
        public async Task<ActionResult<_Member>> setMember([FromBody]_Member member)
         {
             member.Password = encryption.HashPassword(member.Password);//hashing the passsword
             await _context.Members.AddAsync(member);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();         
+            if (members == null) {
+             return BadRequest(new { status = "failed", error = "Failed to connect" }); }
+            var tokenString = BuildToken(member);
+            return Ok(new { status = "success", token = tokenString });
 
-            if (members == null){return BadRequest(new { status = "failed", error = "Failed to connect" });}
-            return Ok(new { status = "success", member = members });
         }
 
        
