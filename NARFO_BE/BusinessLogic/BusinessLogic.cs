@@ -4,11 +4,9 @@ using System.Text;
 
 namespace BusinessLogic
 {
-    public class Program
+    class BusinessLogic
     {
-        public static void Main(string[] args)
-        {
-        }
-
+        //Login implemantation would go here
+        //Registration
     }
 }

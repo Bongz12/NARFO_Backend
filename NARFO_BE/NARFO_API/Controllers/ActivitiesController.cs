@@ -11,46 +11,46 @@ namespace NARFO_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MembersController : ControllerBase
+    public class ActivitiesController : ControllerBase
     {
         private readonly narfoContext _context;
 
-        public MembersController(narfoContext context)
+        public ActivitiesController(narfoContext context)
         {
             _context = context;
         }
 
-        // GET: api/Members
+        // GET: api/Activities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Members>>> GetMembers()
+        public async Task<ActionResult<IEnumerable<Activity>>> GetActivity()
         {
-            return await _context.Members.ToListAsync();
+            return await _context.Activity.ToListAsync();
         }
 
-        // GET: api/Members/5
+        // GET: api/Activities/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Members>> GetMembers(string id)
+        public async Task<ActionResult<Activity>> GetActivity(int id)
         {
-            var members = await _context.Members.FindAsync(id);
+            var activity = await _context.Activity.FindAsync(id);
 
-            if (members == null)
+            if (activity == null)
             {
                 return NotFound();
             }
 
-            return members;
+            return activity;
         }
 
-        // PUT: api/Members/5
+        // PUT: api/Activities/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMembers(string id, Members members)
+        public async Task<IActionResult> PutActivity(int id, Activity activity)
         {
-            if (id != members.MemNo)
+            if (id != activity.ActiviryId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(members).State = EntityState.Modified;
+            _context.Entry(activity).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +58,7 @@ namespace NARFO_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MembersExists(id))
+                if (!ActivityExists(id))
                 {
                     return NotFound();
                 }
@@ -71,18 +71,18 @@ namespace NARFO_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Members
+        // POST: api/Activities
         [HttpPost]
-        public async Task<ActionResult<Members>> PostMembers(Members members)
+        public async Task<ActionResult<Activity>> PostActivity(Activity activity)
         {
-            _context.Members.Add(members);
+            _context.Activity.Add(activity);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (MembersExists(members.MemNo))
+                if (ActivityExists(activity.ActiviryId))
                 {
                     return Conflict();
                 }
@@ -92,28 +92,28 @@ namespace NARFO_API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetMembers", new { id = members.MemNo }, members);
+            return CreatedAtAction("GetActivity", new { id = activity.ActiviryId }, activity);
         }
 
-        // DELETE: api/Members/5
+        // DELETE: api/Activities/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Members>> DeleteMembers(string id)
+        public async Task<ActionResult<Activity>> DeleteActivity(int id)
         {
-            var members = await _context.Members.FindAsync(id);
-            if (members == null)
+            var activity = await _context.Activity.FindAsync(id);
+            if (activity == null)
             {
                 return NotFound();
             }
 
-            _context.Members.Remove(members);
+            _context.Activity.Remove(activity);
             await _context.SaveChangesAsync();
 
-            return members;
+            return activity;
         }
 
-        private bool MembersExists(string id)
+        private bool ActivityExists(int id)
         {
-            return _context.Members.Any(e => e.MemNo == id);
+            return _context.Activity.Any(e => e.ActiviryId == id);
         }
     }
 }

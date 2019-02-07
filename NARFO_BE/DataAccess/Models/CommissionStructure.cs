@@ -5,9 +5,11 @@ namespace DataAccess.Models
 {
     public partial class CommissionStructure
     {
-        public int CommissionStructureId { get; set; }
-        public int? CostCode { get; set; }
-        public double? Commission { get; set; }
+        public decimal? Code { get; set; }
         public string Description { get; set; }
+        public int? Commission { get; set; }
+        public int ComSid { get; set; }
+
+        public virtual CostCode CodeNavigation { get; set; }
     }
 }

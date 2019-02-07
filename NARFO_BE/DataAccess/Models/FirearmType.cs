@@ -3,8 +3,15 @@ using System.Collections.Generic;
 
 namespace DataAccess.Models
 {
-    public partial class FirearmType
+    public partial class FireArmType
     {
-        public string FirearmType1 { get; set; }
+        public FireArmType()
+        {
+            Endorsement = new HashSet<Endorsement>();
+        }
+
+        public string FireArmType1 { get; set; }
+
+        public virtual ICollection<Endorsement> Endorsement { get; set; }
     }
 }

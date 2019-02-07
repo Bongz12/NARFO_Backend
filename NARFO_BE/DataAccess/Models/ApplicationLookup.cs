@@ -8,6 +8,6 @@ namespace DataAccess.Models
         public int AppLookupId { get; set; }
         public string ApplicationType { get; set; }
         public string Description { get; set; }
-        public string UnitStandard { get; set; }
+        public decimal? UnitStandard { get; set; }
     }
 }

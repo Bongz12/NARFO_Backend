@@ -15,36 +15,25 @@ namespace DataAccess.Models
         {
         }
 
-        public virtual DbSet<Actions> Actions { get; set; }
-        public virtual DbSet<ActivityLookup> ActivityLookup { get; set; }
-        public virtual DbSet<ActivityRegister> ActivityRegister { get; set; }
-        public virtual DbSet<Address> Address { get; set; }
+        public virtual DbSet<Activity> Activity { get; set; }
+        public virtual DbSet<Administrator> Administrator { get; set; }
         public virtual DbSet<ApplicationLookup> ApplicationLookup { get; set; }
         public virtual DbSet<BankDetails> BankDetails { get; set; }
-        public virtual DbSet<Branch> Branch { get; set; }
-        public virtual DbSet<CertificationLookUp> CertificationLookUp { get; set; }
         public virtual DbSet<Club> Club { get; set; }
-        public virtual DbSet<Commission> Commission { get; set; }
+        public virtual DbSet<Comission> Comission { get; set; }
         public virtual DbSet<CommissionStructure> CommissionStructure { get; set; }
         public virtual DbSet<CostCode> CostCode { get; set; }
         public virtual DbSet<DedicatedStatus> DedicatedStatus { get; set; }
-        public virtual DbSet<Dslookup> Dslookup { get; set; }
-        public virtual DbSet<EndorsementLookup> EndorsementLookup { get; set; }
-        public virtual DbSet<Endorsements> Endorsements { get; set; }
-        public virtual DbSet<FirearmType> FirearmType { get; set; }
-        public virtual DbSet<MemActivityStatus> MemActivityStatus { get; set; }
-        public virtual DbSet<MemberTypeLookUp> MemberTypeLookUp { get; set; }
-        public virtual DbSet<Members> Members { get; set; }
-        public virtual DbSet<Members1> Members1 { get; set; }
-        public virtual DbSet<NextNoValue> NextNoValue { get; set; }
+        public virtual DbSet<Endorsement> Endorsement { get; set; }
+        public virtual DbSet<FireArmType> FireArmType { get; set; }
+        public virtual DbSet<Login> Login { get; set; }
+        public virtual DbSet<Member> Member { get; set; }
         public virtual DbSet<Outlets> Outlets { get; set; }
+        public virtual DbSet<Payment> Payment { get; set; }
         public virtual DbSet<PendingRenewal> PendingRenewal { get; set; }
-        public virtual DbSet<Prefixes> Prefixes { get; set; }
         public virtual DbSet<Qualification> Qualification { get; set; }
-        public virtual DbSet<QualificationLookUp> QualificationLookUp { get; set; }
         public virtual DbSet<SalesReps> SalesReps { get; set; }
-        public virtual DbSet<SectionLookup> SectionLookup { get; set; }
-        public virtual DbSet<Transactions> Transactions { get; set; }
+        public virtual DbSet<Transaction> Transaction { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -59,133 +48,108 @@ namespace DataAccess.Models
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
 
-            modelBuilder.Entity<Actions>(entity =>
+            modelBuilder.Entity<Activity>(entity =>
             {
-                entity.HasKey(e => e.ShortCode);
+                entity.HasKey(e => e.ActiviryId);
 
-                entity.Property(e => e.ShortCode)
-                    .HasMaxLength(10)
+                entity.Property(e => e.ActiviryId)
+                    .HasColumnName("ActiviryID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Action).HasMaxLength(50);
-            });
+                entity.Property(e => e.ActivityDate).HasColumnType("date");
 
-            modelBuilder.Entity<ActivityLookup>(entity =>
-            {
-                entity.HasKey(e => e.Activity);
+                entity.Property(e => e.ActivityDescription)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Activity)
-                    .HasMaxLength(255)
-                    .ValueGeneratedNever();
-            });
+                entity.Property(e => e.ActivityType)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
 
-            modelBuilder.Entity<ActivityRegister>(entity =>
-            {
-                entity.HasKey(e => e.ActivityId);
+                entity.Property(e => e.Caliber)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ActivityId)
-                    .HasColumnName("ActivityID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.DateSubmitted).HasColumnType("date");
 
-                entity.Property(e => e.ActivityDate).HasColumnType("datetime");
-
-                entity.Property(e => e.ActivityType).HasMaxLength(50);
-
-                entity.Property(e => e.Caliber).HasMaxLength(30);
-
-                entity.Property(e => e.DateSubmitted).HasColumnType("datetime");
-
-                entity.Property(e => e.FirearmType).HasMaxLength(50);
+                entity.Property(e => e.FirearmType)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.MemNo)
                     .IsRequired()
-                    .HasMaxLength(10);
-
-                entity.Property(e => e.Score).HasMaxLength(255);
-            });
-
-            modelBuilder.Entity<Address>(entity =>
-            {
-                entity.Property(e => e.AddressId).HasColumnName("AddressID");
-
-                entity.Property(e => e.City).HasMaxLength(50);
-
-                entity.Property(e => e.MemNo)
-                    .IsRequired()
-                    .HasMaxLength(10);
-
-                entity.Property(e => e.PhysicalAddress)
-                    .HasColumnName("Physical Address")
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.PostalCode)
-                    .HasColumnName("Postal Code")
-                    .HasMaxLength(6);
-
-                entity.Property(e => e.Province).HasMaxLength(50);
-
-                entity.Property(e => e.Suburb).HasMaxLength(50);
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.MemNoNavigation)
-                    .WithMany(p => p.Address)
+                    .WithMany(p => p.Activity)
                     .HasForeignKey(d => d.MemNo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Address__MemNo__0B5CAFEA");
+                    .HasConstraintName("FK_Activity_Member");
+            });
+
+            modelBuilder.Entity<Administrator>(entity =>
+            {
+                entity.HasKey(e => e.AdminId)
+                    .HasName("PK_Administrator_1");
+
+                entity.Property(e => e.AdminId)
+                    .HasColumnName("AdminID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.MemNo)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MemType)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.MemNoNavigation)
+                    .WithMany(p => p.Administrator)
+                    .HasForeignKey(d => d.MemNo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Administrator_Member");
             });
 
             modelBuilder.Entity<ApplicationLookup>(entity =>
             {
                 entity.HasKey(e => e.AppLookupId);
 
-                entity.ToTable("Application Lookup");
-
-                entity.Property(e => e.AppLookupId)
-                    .HasColumnName("AppLookupID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.AppLookupId).HasColumnName("AppLookupID");
 
                 entity.Property(e => e.ApplicationType)
-                    .HasColumnName("Application Type")
-                    .HasMaxLength(50);
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Description).HasMaxLength(50);
+                entity.Property(e => e.Description)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UnitStandard).HasMaxLength(10);
+                entity.Property(e => e.UnitStandard).HasColumnType("numeric(10, 0)");
             });
 
             modelBuilder.Entity<BankDetails>(entity =>
             {
-                entity.Property(e => e.BankDetailsId).HasColumnName("BankDetailsID");
+                entity.Property(e => e.BankDetailsId)
+                    .HasColumnName("BankDetailsID")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .ValueGeneratedNever();
 
-                entity.Property(e => e.AccountNumber)
-                    .HasColumnName("Account Number")
-                    .HasMaxLength(50);
+                entity.Property(e => e.AccountNumber).HasColumnType("numeric(18, 0)");
+
+                entity.Property(e => e.BranchCode)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Company)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ContraNumber)
-                    .HasColumnName("Contra Number")
-                    .HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<Branch>(entity =>
-            {
-                entity.HasKey(e => e.Branch1);
-
-                entity.Property(e => e.Branch1)
-                    .HasColumnName("Branch")
-                    .HasMaxLength(255)
-                    .ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<CertificationLookUp>(entity =>
-            {
-                entity.Property(e => e.CertificationLookupId)
-                    .HasColumnName("CertificationLookupID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Description).HasMaxLength(50);
+                entity.Property(e => e.ContactNumber).HasColumnType("numeric(10, 0)");
             });
 
             modelBuilder.Entity<Club>(entity =>
@@ -194,187 +158,386 @@ namespace DataAccess.Models
                     .HasColumnName("ClubID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Administration).HasMaxLength(50);
+                entity.Property(e => e.Administartion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ClubEmail).HasMaxLength(50);
+                entity.Property(e => e.ClubEmail)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ClubName).HasMaxLength(50);
+                entity.Property(e => e.ClubName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ClubPostAdd1).HasMaxLength(50);
+                entity.Property(e => e.ClubPostAddress1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ClubPostAdd2).HasMaxLength(50);
+                entity.Property(e => e.ClubTelNo).HasColumnType("numeric(10, 0)");
 
-                entity.Property(e => e.ClubPostAdd3).HasMaxLength(50);
+                entity.Property(e => e.ClubWebSite)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ClubTelNo).HasMaxLength(50);
+                entity.Property(e => e.Executive)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ClubWebSite).HasMaxLength(50);
-
-                entity.Property(e => e.Executive).HasMaxLength(50);
-
-                entity.Property(e => e.Fardh)
-                    .HasColumnName("FARDH")
-                    .HasMaxLength(20);
+                entity.Property(e => e.Fard)
+                    .HasColumnName("FARD")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Fards)
                     .HasColumnName("FARDS")
-                    .HasMaxLength(20);
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Secretary).HasMaxLength(50);
+                entity.Property(e => e.Secretary)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Commission>(entity =>
+            modelBuilder.Entity<Comission>(entity =>
             {
-                entity.Property(e => e.CommissionId)
-                    .HasColumnName("CommissionID")
+                entity.Property(e => e.ComissionId)
+                    .HasColumnName("ComissionID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Branch).HasMaxLength(50);
+                entity.Property(e => e.Branch)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ClientMemNo).HasMaxLength(10);
+                entity.Property(e => e.ClientMemNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ComDate).HasColumnType("datetime");
+                entity.Property(e => e.Code).HasColumnType("numeric(10, 0)");
 
-                entity.Property(e => e.ComType).HasMaxLength(20);
+                entity.Property(e => e.ComDate).HasColumnType("date");
 
-                entity.Property(e => e.Commission1)
-                    .HasColumnName("Commission")
+                entity.Property(e => e.ComType)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Comission1)
+                    .HasColumnName("Comission")
                     .HasColumnType("money");
 
-                entity.Property(e => e.PaymentDate).HasColumnType("datetime");
+                entity.Property(e => e.PaymentDate).HasColumnType("date");
 
                 entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
 
-                entity.Property(e => e.PaymentMethod).HasMaxLength(15);
+                entity.Property(e => e.PaymentMethod)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.PaymentTransNo).HasMaxLength(15);
+                entity.Property(e => e.PaymentTransNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.RepNo).HasMaxLength(10);
+                entity.Property(e => e.RepNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.TransactionNo).HasMaxLength(15);
+                entity.Property(e => e.TransactionNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CodeNavigation)
+                    .WithMany(p => p.Comission)
+                    .HasForeignKey(d => d.Code)
+                    .HasConstraintName("FK_Comission_CostCode");
+
+                entity.HasOne(d => d.Payment)
+                    .WithMany(p => p.Comission)
+                    .HasForeignKey(d => d.PaymentId)
+                    .HasConstraintName("FK_Comission_Payment");
+
+                entity.HasOne(d => d.TransactionNoNavigation)
+                    .WithMany(p => p.Comission)
+                    .HasForeignKey(d => d.TransactionNo)
+                    .HasConstraintName("FK_Comission_Transaction");
             });
 
             modelBuilder.Entity<CommissionStructure>(entity =>
             {
-                entity.Property(e => e.CommissionStructureId).HasColumnName("CommissionStructureID");
+                entity.HasKey(e => e.ComSid);
 
-                entity.Property(e => e.Description).HasMaxLength(25);
+                entity.Property(e => e.ComSid)
+                    .HasColumnName("ComSID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Code).HasColumnType("numeric(10, 0)");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CodeNavigation)
+                    .WithMany(p => p.CommissionStructure)
+                    .HasForeignKey(d => d.Code)
+                    .HasConstraintName("FK_CommissionStructure_CostCode");
             });
 
             modelBuilder.Entity<CostCode>(entity =>
             {
                 entity.HasKey(e => e.Code);
 
-                entity.ToTable("Cost Code");
+                entity.Property(e => e.Code).HasColumnType("numeric(10, 0)");
 
-                entity.Property(e => e.Code).ValueGeneratedNever();
+                entity.Property(e => e.Description)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Description).HasMaxLength(50);
-
-                entity.Property(e => e.Type).HasMaxLength(10);
+                entity.Property(e => e.Type)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<DedicatedStatus>(entity =>
             {
-                entity.HasKey(e => e.DedecatedId);
+                entity.HasKey(e => e.DedicatedId);
 
-                entity.Property(e => e.DedecatedId)
-                    .HasColumnName("DedecatedID")
+                entity.Property(e => e.DedicatedId)
+                    .HasColumnName("DedicatedID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.ApplicationDate).HasColumnType("datetime");
+                entity.Property(e => e.ApplicationDate).HasColumnType("date");
 
-                entity.Property(e => e.DateApproved).HasColumnType("datetime");
+                entity.Property(e => e.Approved)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DateApproved).HasColumnType("date");
 
                 entity.Property(e => e.Dsno)
                     .HasColumnName("DSNo")
-                    .HasMaxLength(15);
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Dstype)
                     .HasColumnName("DSType")
-                    .HasMaxLength(50);
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.MemNo).HasMaxLength(10);
+                entity.Property(e => e.MemNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.TerminationDate).HasColumnType("datetime");
+                entity.Property(e => e.Motivation)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RefusalReason)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Termination)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TerminationReason)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Transfare)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TrasfDsno)
                     .HasColumnName("TrasfDSNo")
-                    .HasMaxLength(25);
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.TrsfAssociation).HasMaxLength(120);
+                entity.Property(e => e.TrsfAssociation)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.TrsfAssociionFarno)
-                    .HasColumnName("TrsfAssociionFARNo")
-                    .HasMaxLength(20);
+                entity.Property(e => e.TrsfAssociationFarn)
+                    .HasColumnName("TrsfAssociationFARN")
+                    .HasColumnType("numeric(10, 0)");
+
+                entity.HasOne(d => d.MemNoNavigation)
+                    .WithMany(p => p.DedicatedStatus)
+                    .HasForeignKey(d => d.MemNo)
+                    .HasConstraintName("FK_DedicatedStatus_Member");
             });
 
-            modelBuilder.Entity<Dslookup>(entity =>
-            {
-                entity.ToTable("DSLookup");
-
-                entity.Property(e => e.DslookupId).HasColumnName("DSLookupID");
-
-                entity.Property(e => e.DedicatedStatus).HasMaxLength(255);
-            });
-
-            modelBuilder.Entity<EndorsementLookup>(entity =>
-            {
-                entity.Property(e => e.EndorsementLookupId).HasColumnName("EndorsementLookupID");
-
-                entity.Property(e => e.EndorsementType)
-                    .HasColumnName("Endorsement Type")
-                    .HasMaxLength(255);
-            });
-
-            modelBuilder.Entity<Endorsements>(entity =>
+            modelBuilder.Entity<Endorsement>(entity =>
             {
                 entity.HasKey(e => e.EndorsId);
 
                 entity.Property(e => e.EndorsId).HasColumnName("EndorsID");
 
-                entity.Property(e => e.Action).HasMaxLength(50);
+                entity.Property(e => e.Action)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Calibre).HasMaxLength(50);
+                entity.Property(e => e.Calibre)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.EndorsementDate).HasColumnType("datetime");
+                entity.Property(e => e.EndorsementDate).HasColumnType("date");
 
-                entity.Property(e => e.EndorsementNo).HasMaxLength(255);
+                entity.Property(e => e.EndorsementNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.EndorsementType).HasMaxLength(255);
+                entity.Property(e => e.EndorsementType)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('Hunting; Sports Shooting; Self Protection')");
 
-                entity.Property(e => e.FcaSection)
-                    .HasColumnName("FCA Section")
-                    .HasMaxLength(255);
+                entity.Property(e => e.Fcasection)
+                    .HasColumnName("FCASection")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FireArmMakeModel).HasMaxLength(100);
+                entity.Property(e => e.FireArmMakeModel)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FireArmType).HasMaxLength(50);
+                entity.Property(e => e.FireArmType)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('Handgun; Rifle; Self Loading Rifle; Shotgun')");
 
-                entity.Property(e => e.MemNo).HasMaxLength(10);
+                entity.Property(e => e.MemNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.SerialNumber).HasMaxLength(25);
+                entity.Property(e => e.SerialNumber)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.FireArmTypeNavigation)
+                    .WithMany(p => p.Endorsement)
+                    .HasForeignKey(d => d.FireArmType)
+                    .HasConstraintName("FK_Endorsement_FireArmType");
+
+                entity.HasOne(d => d.MemNoNavigation)
+                    .WithMany(p => p.Endorsement)
+                    .HasForeignKey(d => d.MemNo)
+                    .HasConstraintName("FK_Endorsement_Member");
             });
 
-            modelBuilder.Entity<FirearmType>(entity =>
+            modelBuilder.Entity<FireArmType>(entity =>
             {
-                entity.HasKey(e => e.FirearmType1);
+                entity.HasKey(e => e.FireArmType1);
 
-                entity.Property(e => e.FirearmType1)
-                    .HasColumnName("FirearmType")
+                entity.Property(e => e.FireArmType1)
+                    .HasColumnName("FireArmType")
                     .HasMaxLength(50)
+                    .IsUnicode(false)
                     .ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<MemActivityStatus>(entity =>
+            modelBuilder.Entity<Login>(entity =>
             {
-                entity.Property(e => e.MemActivityStatusId).HasColumnName("MemActivityStatusID");
+                entity.HasKey(e => e.Email);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Member>(entity =>
+            {
+                entity.HasKey(e => e.MemNo);
 
                 entity.Property(e => e.MemNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.CellNo).HasColumnType("numeric(10, 0)");
+
+                entity.Property(e => e.City)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ClubId).HasColumnName("ClubID");
+
+                entity.Property(e => e.CurrentAssName)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CurrentAssociation)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(10);
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Ethinicity)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ExpiryDate).HasColumnType("date");
+
+                entity.Property(e => e.Firstname)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Idno)
+                    .HasColumnName("IDNo")
+                    .HasMaxLength(13)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InceptionDate).HasColumnType("date");
+
+                entity.Property(e => e.MemType)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('Representative; Ordinary; Executive; Client; Owner')");
+
+                entity.Property(e => e.MyBonusNo).HasColumnType("numeric(18, 0)");
 
                 entity.Property(e => e.NoOfFa).HasColumnName("NoOfFA");
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PhysicalAddress)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Province)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sex)
+                    .HasMaxLength(6)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Suburb)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Surname)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(5)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TypeFahg).HasColumnName("TypeFAHG");
 
@@ -383,8 +546,6 @@ namespace DataAccess.Models
                 entity.Property(e => e.TypeFasa).HasColumnName("TypeFASA");
 
                 entity.Property(e => e.TypeFasg).HasColumnName("TypeFASG");
-
-                entity.Property(e => e.TypeHuntingOutfitter).HasColumnName("TypeHUntingOutfitter");
 
                 entity.Property(e => e.TypeHuntingPh).HasColumnName("TypeHuntingPH");
 
@@ -400,274 +561,219 @@ namespace DataAccess.Models
 
                 entity.Property(e => e.TypeSssg).HasColumnName("TypeSSSG");
 
-                entity.HasOne(d => d.MemNoNavigation)
-                    .WithMany(p => p.MemActivityStatus)
-                    .HasForeignKey(d => d.MemNo)
+                entity.Property(e => e.Username)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Club)
+                    .WithMany(p => p.Member)
+                    .HasForeignKey(d => d.ClubId)
+                    .HasConstraintName("FK_Member_Club");
+
+                entity.HasOne(d => d.EmailNavigation)
+                    .WithMany(p => p.Member)
+                    .HasForeignKey(d => d.Email)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__MemActivi__MemNo__0D44F85C");
-            });
+                    .HasConstraintName("FK_Member_Login");
 
-            modelBuilder.Entity<MemberTypeLookUp>(entity =>
-            {
-                entity.HasKey(e => e.MemberTypeId);
-
-                entity.Property(e => e.MemberTypeId).HasColumnName("MemberTypeID");
-
-                entity.Property(e => e.MemberType).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<Members>(entity =>
-            {
-                entity.HasKey(e => e.MemNo)
-                    .HasName("PK__Members__E8C362CD9A89FCBC");
-
-                entity.Property(e => e.MemNo)
-                    .HasMaxLength(10)
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Branch).HasMaxLength(50);
-
-                entity.Property(e => e.CellNo).HasMaxLength(50);
-
-                entity.Property(e => e.CurrnetAssName).HasMaxLength(100);
-
-                entity.Property(e => e.Email).HasMaxLength(50);
-
-                entity.Property(e => e.Ethnicity).HasMaxLength(25);
-
-                entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Firstname).HasMaxLength(50);
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Idno)
-                    .HasColumnName("IDNo")
-                    .HasMaxLength(30);
-
-                entity.Property(e => e.InceptionDate).HasColumnType("datetime");
-
-                entity.Property(e => e.MemType).HasMaxLength(25);
-
-                entity.Property(e => e.MyBonusNo).HasMaxLength(25);
-
-                entity.Property(e => e.Sex).HasMaxLength(255);
-
-                entity.Property(e => e.Surname).HasMaxLength(60);
-
-                entity.Property(e => e.Title).HasMaxLength(6);
-
-                entity.Property(e => e.Username).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<Members1>(entity =>
-            {
-                entity.ToTable("_Members");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Firstname).HasMaxLength(50);
-
-                entity.Property(e => e.Password).HasMaxLength(50);
-
-                entity.Property(e => e.Surname).HasMaxLength(60);
-
-                entity.Property(e => e.Username).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<NextNoValue>(entity =>
-            {
-                entity.HasKey(e => e.NumberId);
-
-                entity.Property(e => e.NumberId).HasColumnName("NumberID");
-
-                entity.Property(e => e.NumberType).HasMaxLength(50);
-
-                entity.Property(e => e.Parameter).HasMaxLength(10);
+                entity.HasOne(d => d.OwnerNavigation)
+                    .WithMany(p => p.Member)
+                    .HasForeignKey(d => d.Owner)
+                    .HasConstraintName("FK_Member_Outlets");
             });
 
             modelBuilder.Entity<Outlets>(entity =>
             {
-                entity.HasKey(e => e.OutletId);
+                entity.HasKey(e => e.Owner);
 
-                entity.Property(e => e.OutletId).HasColumnName("OutletID");
+                entity.Property(e => e.Owner).ValueGeneratedNever();
 
-                entity.Property(e => e.Address).HasMaxLength(100);
+                entity.Property(e => e.Address)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.City).HasMaxLength(50);
+                entity.Property(e => e.City)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Email).HasMaxLength(100);
+                entity.Property(e => e.Email)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Outlet).HasMaxLength(120);
+                entity.Property(e => e.PostalCode).HasColumnType("numeric(6, 0)");
 
-                entity.Property(e => e.PostalCode).HasMaxLength(10);
+                entity.Property(e => e.TellNumber).HasColumnType("numeric(10, 0)");
+            });
 
-                entity.Property(e => e.TelNumber).HasMaxLength(12);
+            modelBuilder.Entity<Payment>(entity =>
+            {
+                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
+
+                entity.Property(e => e.MemNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PaymentType)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.MemNoNavigation)
+                    .WithMany(p => p.Payment)
+                    .HasForeignKey(d => d.MemNo)
+                    .HasConstraintName("FK_Payment_Member");
             });
 
             modelBuilder.Entity<PendingRenewal>(entity =>
             {
-                entity.HasKey(e => e.RenewalId);
+                entity.HasKey(e => e.RenewalD);
 
-                entity.Property(e => e.RenewalId).HasColumnName("RenewalID");
-
-                entity.Property(e => e.FinYear).HasMaxLength(4);
+                entity.Property(e => e.RenewalD).ValueGeneratedNever();
 
                 entity.Property(e => e.MemNo)
-                    .IsRequired()
-                    .HasMaxLength(10);
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Outlet).HasMaxLength(50);
+                entity.Property(e => e.Outlet)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.RenewalDate).HasColumnType("datetime");
+                entity.Property(e => e.RenewalDate).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.RenewalFee).HasColumnType("money");
+                entity.Property(e => e.RenewalFee).HasColumnType("decimal(18, 2)");
 
-                entity.Property(e => e.SalesRep).HasMaxLength(15);
-            });
+                entity.Property(e => e.SalesRep)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-            modelBuilder.Entity<Prefixes>(entity =>
-            {
-                entity.HasKey(e => e.Prefix);
-
-                entity.Property(e => e.Prefix)
-                    .HasMaxLength(10)
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Description).HasMaxLength(100);
+                entity.HasOne(d => d.MemNoNavigation)
+                    .WithMany(p => p.PendingRenewalNavigation)
+                    .HasForeignKey(d => d.MemNo)
+                    .HasConstraintName("FK_PendingRenewal_Member");
             });
 
             modelBuilder.Entity<Qualification>(entity =>
             {
-                entity.Property(e => e.QualificationId).HasColumnName("QualificationID");
+                entity.Property(e => e.QualificationId)
+                    .HasColumnName("QualificationID")
+                    .ValueGeneratedNever();
 
-                entity.Property(e => e.Assessment).HasMaxLength(40);
+                entity.Property(e => e.Assessment)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.AssessmentDate)
-                    .HasColumnName("Assessment Date")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.AssessmentDate).HasColumnType("date");
 
-                entity.Property(e => e.AssessmentNo).HasMaxLength(20);
+                entity.Property(e => e.AssessmentNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.MemNo).HasMaxLength(25);
-            });
+                entity.Property(e => e.LinkDoc)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
-            modelBuilder.Entity<QualificationLookUp>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.MemNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Qualification).HasMaxLength(40);
+                entity.HasOne(d => d.MemNoNavigation)
+                    .WithMany(p => p.Qualification)
+                    .HasForeignKey(d => d.MemNo)
+                    .HasConstraintName("FK_Qualification_Member");
             });
 
             modelBuilder.Entity<SalesReps>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
 
-                entity.Property(e => e.AccountNo).HasMaxLength(20);
+                entity.Property(e => e.AccountNo).HasColumnType("numeric(15, 0)");
 
-                entity.Property(e => e.AccountType).HasMaxLength(20);
+                entity.Property(e => e.AccountType)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.BankName).HasMaxLength(20);
-
-                entity.Property(e => e.Branch).HasMaxLength(50);
-
-                entity.Property(e => e.BranchCode).HasMaxLength(10);
-
-                entity.Property(e => e.CellNo).HasMaxLength(50);
-
-                entity.Property(e => e.City).HasMaxLength(50);
-
-                entity.Property(e => e.Email).HasMaxLength(50);
-
-                entity.Property(e => e.Firstname).HasMaxLength(50);
-
-                entity.Property(e => e.Frequency).HasMaxLength(1);
-
-                entity.Property(e => e.Idno)
-                    .HasColumnName("IDNo")
-                    .HasMaxLength(30);
+                entity.Property(e => e.Frequency)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.MemNo)
-                    .IsRequired()
-                    .HasMaxLength(10);
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.MemType).HasMaxLength(25);
-
-                entity.Property(e => e.PhysicalAddress)
-                    .HasColumnName("Physical Address")
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.PostalCode)
-                    .HasColumnName("Postal Code")
-                    .HasMaxLength(6);
-
-                entity.Property(e => e.Province).HasMaxLength(50);
-
-                entity.Property(e => e.Suburb).HasMaxLength(50);
-
-                entity.Property(e => e.Surname)
-                    .HasColumnName("SURNAME")
-                    .HasMaxLength(60);
-
-                entity.Property(e => e.Title).HasMaxLength(6);
-
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.HasOne(d => d.MemNoNavigation)
+                    .WithMany(p => p.SalesReps)
+                    .HasForeignKey(d => d.MemNo)
+                    .HasConstraintName("FK_SalesReps_Member");
             });
 
-            modelBuilder.Entity<SectionLookup>(entity =>
+            modelBuilder.Entity<Transaction>(entity =>
             {
-                entity.HasKey(e => e.Section);
+                entity.HasKey(e => e.TransactionNo);
 
-                entity.Property(e => e.Section)
-                    .HasMaxLength(255)
+                entity.Property(e => e.TransactionNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
                     .ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<Transactions>(entity =>
-            {
-                entity.HasKey(e => e.PaymentId);
-
-                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
 
                 entity.Property(e => e.Amount).HasColumnType("money");
 
-                entity.Property(e => e.Beneficiary).HasMaxLength(255);
+                entity.Property(e => e.Beneficiary)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.CostCode).HasColumnName("Cost Code");
+                entity.Property(e => e.DatePaid).HasColumnType("date");
 
-                entity.Property(e => e.DatePaid).HasColumnType("datetime");
+                entity.Property(e => e.Description)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Description).HasMaxLength(255);
+                entity.Property(e => e.ExpiryDate).HasColumnType("date");
 
-                entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
+                entity.Property(e => e.InceptionDate).HasColumnType("date");
 
-                entity.Property(e => e.InceptionDate).HasColumnType("datetime");
+                entity.Property(e => e.InvoiceDate).HasColumnType("date");
 
-                entity.Property(e => e.InvoiceDate)
-                    .HasColumnName("Invoice Date")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.LoanSponsor)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.InvoiceNo).HasMaxLength(50);
+                entity.Property(e => e.MemNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.LoanSponsor).HasMaxLength(255);
+                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
 
-                entity.Property(e => e.MemNo).HasMaxLength(10);
+                entity.Property(e => e.PaymentMethod)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.PaymentMethod).HasMaxLength(50);
+                entity.Property(e => e.ReceiptNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ReceiptNo).HasMaxLength(50);
+                entity.Property(e => e.RepTransNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.RepTransNo).HasMaxLength(50);
-
-                entity.Property(e => e.StoreTransNo).HasMaxLength(10);
-
-                entity.Property(e => e.TransactionNo).HasMaxLength(25);
+                entity.Property(e => e.StoreTransNo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Vat).HasColumnType("money");
 
-                entity.Property(e => e.Year).HasMaxLength(4);
+                entity.Property(e => e.Year).HasColumnType("smalldatetime");
+
+                entity.HasOne(d => d.MemNoNavigation)
+                    .WithMany(p => p.Transaction)
+                    .HasForeignKey(d => d.MemNo)
+                    .HasConstraintName("FK_Transaction_Member");
+
+                entity.HasOne(d => d.Payment)
+                    .WithMany(p => p.Transaction)
+                    .HasForeignKey(d => d.PaymentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Transaction_Payment");
             });
         }
     }

@@ -31,7 +31,7 @@ namespace NARFO_API
             
             var connection = @"Server=dev.retrotest.co.za;Initial Catalog=narfo;Persist Security Info=False;User ID=group2;Password=jtn8TVNQMW_28esy;";
             services.AddDbContext<narfoContext>
-                (options => options.UseSqlServer(connection));
+               (options => options.UseSqlServer(connection));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

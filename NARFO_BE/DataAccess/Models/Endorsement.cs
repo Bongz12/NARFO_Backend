@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DataAccess.Models
 {
-    public partial class Endorsements
+    public partial class Endorsement
     {
         public int EndorsId { get; set; }
         public string MemNo { get; set; }
@@ -13,8 +13,11 @@ namespace DataAccess.Models
         public string FireArmMakeModel { get; set; }
         public string Calibre { get; set; }
         public string SerialNumber { get; set; }
-        public string FcaSection { get; set; }
+        public string Fcasection { get; set; }
         public DateTime? EndorsementDate { get; set; }
         public string Action { get; set; }
+
+        public virtual FireArmType FireArmTypeNavigation { get; set; }
+        public virtual Member MemNoNavigation { get; set; }
     }
 }
