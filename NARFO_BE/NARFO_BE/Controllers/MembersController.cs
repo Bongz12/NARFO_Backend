@@ -17,7 +17,7 @@ using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("Member")]
+    [Route("api/Member")]
     [EnableCors("MyPolicy")]
     public class MembersController : ControllerBase
     {
@@ -28,24 +28,20 @@ namespace NARFO_BE.Controllers
         {
             Config = config;
             _context = context;
-            
+        }
+        
+      
+        private ActionResult<Member> Json(object p) {
+            throw new NotImplementedException();
         }
 
-        public IEnumerable<Member> GetAllMembers() { return members; }
-      private bool MembersExists(String MemNo) { return _context.Member.Any(member => member.MemNo == MemNo); }
-        public void ListofMembers(List<Member> members) {this.members = members; }
-        private ActionResult<Member> Json(object p) { throw new NotImplementedException(); }
-
-
-       
         private string BuildToken(Member user)
-
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
-       new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-       new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
     };
             var token = new JwtSecurityToken(Config["Jwt:Issuer"],
@@ -62,21 +58,17 @@ namespace NARFO_BE.Controllers
         [HttpPost("post/login")]
         public async Task<ActionResult <Member>> Login([FromBody] Member model)
         {
-
-            Member user = await _context.Member.FirstOrDefaultAsync(member=>member.Email == model.Email && member.Password == encryption.HashPassword(model.Password));
-            
-            if (user == null)
-            {
-                return BadRequest(new { status = "Failed", message = "Invalid login" });
-            }
-            else {
-                var tokenString = BuildToken(user);
-
-                return Ok(new { status = "Success", token = tokenString });
-            }
-
-        }
-
+           
+           Member user = await _context.Member.FirstOrDefaultAsync(member => member.Email == model.Email && member.Password == encryption.HashPassword(model.Password));
+                if(user == null)
+                {
+                    return BadRequest(new { status = "Failed", message = "Invalid Login"});
+                } else
+                {
+                    var tokenString = BuildToken(user);
+                    return Ok(new { status = "Success", token = tokenString });
+                }
+     }
 
         // GET: Member/Email
         [HttpGet("get/all/user")]
@@ -92,13 +84,10 @@ namespace NARFO_BE.Controllers
           return      Ok(new { status = "success", members=endpoint });
         }
        
-        [HttpGet("get/all")]
-        public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
-        {
-            return await _context.Member.ToListAsync();
-        }
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<Member>>> GetMembers() {return await _context.Member.ToListAsync();}
      
-        [HttpGet("get/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Member>> GetMembers(int id){
             var amembers = await _context.Member.FindAsync(id); //gets the member with matching id
             if (amembers == null){return BadRequest(new { status = "failed", error = "Failed to connect" }); }//fail response 
