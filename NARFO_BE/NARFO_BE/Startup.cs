@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NARFO_BE.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace NARFO_BE
 {
@@ -42,10 +43,11 @@ namespace NARFO_BE
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
-
-
-
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+            });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options =>
        {
            options.TokenValidationParameters = new TokenValidationParameters
@@ -81,6 +83,11 @@ namespace NARFO_BE
             app.UseMvc();
             app.UseCors("MyPolicy");
             app.UseAuthentication();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
         }
     }
 }

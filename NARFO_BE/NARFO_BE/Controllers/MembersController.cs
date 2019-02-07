@@ -17,8 +17,8 @@ using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("api/Member")]
-    [EnableCors("MyPolicy")]
+    [Route("api/member")]
+   
     public class MembersController : ControllerBase
     {
         private readonly narfoContext _context;
@@ -71,16 +71,19 @@ namespace NARFO_BE.Controllers
      }
 
         // GET: Member/Email
-        [HttpGet("get/all/user")]
+        [HttpGet("all/user")]
         public  async Task<ActionResult<MemberPrototype>> GetMembersEmail()
         {
             List<MemberPrototype> endpoint = new List<MemberPrototype>();
-            foreach (Member d in  await _context.Member.ToArrayAsync())
+            foreach (Member member in  await _context.Member.ToArrayAsync())
             {
-                if(d.Username !=  null && d.Email != null )
-               endpoint.Add(new MemberPrototype(d.Username,d.Email));       
+               if(member.Username !=  null && member.Email != null )
+               endpoint.Add(new MemberPrototype(member.Username,member.Email));       
             }
-            if(endpoint == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }
+            if(endpoint == null)
+            {
+                return BadRequest(new { status = "failed", error = "Failed to connect" });
+            }
           return      Ok(new { status = "success", members=endpoint });
         }
        
@@ -89,20 +92,25 @@ namespace NARFO_BE.Controllers
      
         [HttpGet("{id}")]
         public async Task<ActionResult<Member>> GetMembers(int id){
-            var amembers = await _context.Member.FindAsync(id); //gets the member with matching id
-            if (amembers == null){return BadRequest(new { status = "failed", error = "Failed to connect" }); }//fail response 
-            return Ok(new { status = "success", members = amembers });//success response
+            var amembers = await _context.Member.FindAsync(id);
+            if (amembers == null)
+            {
+                return BadRequest(new { status = "failed", error = "Failed to connect" });
+            }
+            return Ok(new { status = "success", members = amembers });
         }
   
        [HttpPost("post/set")]
 
-       public async Task<ActionResult<Member>> setMember([FromBody]Member member)
+       public async Task<ActionResult<Member>> SetMember([FromBody]Member member)
         {
-            member.Password = encryption.HashPassword(member.Password);//hashing the passsword
+            member.Password = encryption.HashPassword(member.Password);
             await _context.Member.AddAsync(member);
             await _context.SaveChangesAsync();         
-            if (members == null) {
-             return BadRequest(new { status = "failed", error = "Failed to connect" }); }
+            if (members == null)
+            {
+             return BadRequest(new { status = "failed", error = "Failed to connect" });
+            }
             var tokenString = BuildToken(member);
             return Ok(new { status = "success", token = tokenString });
 
