@@ -35,14 +35,11 @@ namespace NARFO_BE.Controllers
         }
         public IEnumerable<_Member> GetAllMembers() { return members; }
         private bool MembersExists(int id) { return _context.Members.Any(member => member.Id == id); }
-        public void ListofMembers(List<_Member> members) {this.members = members; }
+     
         private ActionResult<_Member> Json(object p) { throw new NotImplementedException(); }
 
 
-        public void ListofMembers(List<_Member> members)
-        {
-            this.members = members;
-        }
+    
         private string BuildToken(_Member user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config["Jwt:Key"]));
@@ -66,23 +63,17 @@ namespace NARFO_BE.Controllers
         [HttpPost("post/login")]
         public async Task<ActionResult <_Member>> Login([FromBody] _Member model)
         {
-
-            _Member user = await _context.Members.FirstOrDefaultAsync(member=>member.Email == model.Email && member.Password == encryption.HashPassword(model.Password));
-            if (user == null){  return BadRequest(new { status = "Failed", message = "Invalid login" }); }
-            else {return Ok(new { status = "Success", member = model });}  
-     _Member user = await _context.Members.FirstOrDefaultAsync(member=>member.Email == model.Email && member.Password == encryption.ComputeHash(model.Password));
-
-            if (user == null)
-            {
-                return BadRequest(new { status = "Failed", message = "Invalid login" });
-            }
-            else {
-                var tokenString = BuildToken(user);
-
-                return Ok(new { status = "Success", token = tokenString });
-            }
-
-        }
+           
+           _Member user = await _context.Members.FirstOrDefaultAsync(member => member.Email == model.Email && member.Password == encryption.HashPassword(model.Password));
+                if(user == null)
+                {
+                    return BadRequest(new { status = "Failed", message = "Invalid Login"});
+                } else
+                {
+                    var tokenString = BuildToken(user);
+                    return Ok(new { status = "Success", token = tokenString });
+                }
+     }
 
         // GET: Member/Email
         [HttpGet("get/all/user")]
