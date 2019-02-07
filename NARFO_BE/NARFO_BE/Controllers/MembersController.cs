@@ -17,7 +17,7 @@ using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("Member")]
+    [Route("api/Member")]
     [EnableCors("MyPolicy")]
     public class MembersController : ControllerBase
     {

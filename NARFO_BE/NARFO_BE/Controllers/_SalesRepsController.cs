@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+//using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,7 @@ using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("salesReps")]
+    [Route("api/ salesReps")]
     public class SalesRepsController : ControllerBase
     {
         private readonly narfoContext _context;
