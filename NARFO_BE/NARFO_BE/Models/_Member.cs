@@ -17,7 +17,7 @@ namespace NARFO_BE.Models
 
         public string Title { get; set; }
         public string Firstname { get; set; }
-        public string SURNAME { get; set; }
+        public string Surname { get; set; }
         public string IDNo { get; set; }
         [Column("Physical Address")]
         public string Physical_Address { get; set; }
@@ -37,36 +37,36 @@ namespace NARFO_BE.Models
 
         public string MemType { get; set; }
         public string Ethicity { get; set; }
-        public Boolean Owner { get; set; }
-        public Boolean CurrentAssociation { get; set; }
+        public bool Owner { get; set; }
+        public bool CurrentAssociation { get; set; }
         public string CurrnetAssName { get; set; }
 
-        public Boolean IntHunting { get; set; }
-        public Boolean IntSportShooting { get; set; }
-        public Boolean IntRecreational { get; set; }
-        public Boolean IntSelfDefense { get; set; }
+        public bool IntHunting { get; set; }
+        public bool IntSportShooting { get; set; }
+        public bool IntRecreational { get; set; }
+        public bool IntSelfDefense { get; set; }
 
-        public Boolean TypeSSRLR { get; set; }
-        public Boolean TypeSSRSR { get; set; }
-        public Boolean TypeSSHG { get; set; }
-        public Boolean TypeSSSG { get; set; }
+        public bool TypeSSRLR { get; set; }
+        public bool TypeSSRSR { get; set; }
+        public bool TypeSSHG { get; set; }
+        public bool TypeSSSG { get; set; }
 
-        public Boolean TypeSSMG { get; set; }
-        public Boolean TypeSSSA { get; set; }
-        public Boolean TypeHuntingBiltong { get; set; }
-        public Boolean TypeHuntingTrophy { get; set; }
+        public bool TypeSSMG { get; set; }
+        public bool TypeSSSA { get; set; }
+        public bool TypeHuntingBiltong { get; set; }
+        public bool TypeHuntingTrophy { get; set; }
 
-        public Boolean TypeHuntingPH { get; set; }
-        public Boolean TypeHUntingOutfitter { get; set; }
-        public Boolean TypeFARifle { get; set; }
-        public Boolean TypeHuntTypeFAHGingTrophy { get; set; }
+        public bool TypeHuntingPH { get; set; }
+        public bool TypeHUntingOutfitter { get; set; }
+        public bool TypeFARifle { get; set; }
+        public bool TypeHuntTypeFAHGingTrophy { get; set; }
 
-        public Boolean TypeFAHG { get; set; }
-        public Boolean TypeFASA { get; set; }
-        public Boolean TypeFASG { get; set; }
-        public Boolean NoOfFA { get; set; }
+        public bool TypeFAHG { get; set; }
+        public bool TypeFASA { get; set; }
+        public bool TypeFASG { get; set; }
+        public bool NoOfFA { get; set; }
 
-        public Boolean PendingRenewal { get; set; }
+        public bool PendingRenewal { get; set; }
 
 
 

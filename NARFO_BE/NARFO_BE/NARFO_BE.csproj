@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="IdentityManager" Version="1.0.0-beta5-5" />
     <PackageReference Include="IdentityManager.AspNetIdentity" Version="1.0.0-beta5-1" />
     <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.2" />
