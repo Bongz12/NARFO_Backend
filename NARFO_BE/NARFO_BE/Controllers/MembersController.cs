@@ -30,6 +30,7 @@ namespace NARFO_BE.Controllers
             _context = context;
             
         }
+
         public IEnumerable<Member> GetAllMembers() { return members; }
       private bool MembersExists(String MemNo) { return _context.Member.Any(member => member.MemNo == MemNo); }
         public void ListofMembers(List<Member> members) {this.members = members; }
@@ -38,6 +39,7 @@ namespace NARFO_BE.Controllers
 
        
         private string BuildToken(Member user)
+
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -74,6 +76,7 @@ namespace NARFO_BE.Controllers
             }
 
         }
+
 
         // GET: Member/Email
         [HttpGet("get/all/user")]
