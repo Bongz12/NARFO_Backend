@@ -30,8 +30,11 @@ namespace NARFO_BE
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<narfoContext>(opt =>
-                opt.UseInMemoryDatabase("narfo"));
+            var connection = @"Server=dev.retrotest.co.za;Initial Catalog=narfo;Persist Security Info=False;User ID=group2;Password=jtn8TVNQMW_28esy;";
+            services.AddDbContext<narfoContext>
+               (options => options.UseSqlServer(connection));
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
