@@ -87,9 +87,8 @@ namespace NARFO_BE.Controllers
                endpoint.Add(new MemberPrototype(member.Username,member.Email));       
             }
             if(endpoint == null)
-            {
-                return BadRequest(new { status = "failed", error = "Failed to connect" });
-            }
+             return BadRequest(new { status = "failed", error = "Failed to connect" });
+            
           return      Ok(new { status = "success", members=endpoint });
         }
        
@@ -171,9 +170,8 @@ namespace NARFO_BE.Controllers
 
             await _context.SaveChangesAsync();         
             if (members == null)
-            {
-             return BadRequest(new { status = "failed", error = "Failed to connect" });
-            }
+            return BadRequest(new { status = "failed", error = "Failed to connect" });
+            
             var tokenString = BuildToken(member);
             return Ok(new { status = "success", token = tokenString });
         }

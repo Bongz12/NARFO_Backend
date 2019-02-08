@@ -22,7 +22,6 @@ namespace NARFO_BE.Controllers
             _context = context;
             if (!_context.SalesReps.Any()) {
                 SalesReps newSalesReps = new SalesReps();
-               // newSalesReps.Id = 1; newSalesReps.Username = "Mike"; newSalesReps.Firstname = "Mike"; newSalesReps.Username = "James"; newSalesReps.IDNo = "CN12345678"; newSalesReps.Physical_Address = "Diep in the berg" ;
                 _context.SalesReps.AddAsync(newSalesReps);
                 _context.SaveChanges();
             }
