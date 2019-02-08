@@ -10,7 +10,7 @@ using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("api/ salesReps")]
+    [Route("api/salesReps")]
     public class SalesRepsController : ControllerBase
     {
         private readonly narfoContext _context;
@@ -44,8 +44,9 @@ namespace NARFO_BE.Controllers
 
             foreach (SalesReps _Sales in await _context.SalesReps.ToArrayAsync())
             {
-                if (_Sales.MemNoNavigation.Firstname!= null && _Sales.MemNoNavigation.Surname != null)
-                    salesRepslist.Add(new SalesRepsPrototype(_Sales.MemNoNavigation.Firstname, _Sales.MemNoNavigation.Surname));
+                var member = await _context.Member.FindAsync(_Sales.MemNo);
+                if (member.Firstname!= null && member.Surname != null)
+                    salesRepslist.Add(new SalesRepsPrototype(member.Firstname, member.Surname));
             }
             if (salesRepslist == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }
             return Ok(new { status = "success", members = salesRepslist });
