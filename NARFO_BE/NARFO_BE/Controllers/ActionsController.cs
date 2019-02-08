@@ -60,7 +60,7 @@ namespace NARFO_BE.Controllers
                 }
                 else
                 {
-                    throw;
+                     return BadRequest();
                 }
             }
 
