@@ -43,23 +43,13 @@ namespace Tests
 
         [TestCase]
         public async Task GetAllMembers_ShouldReturnAllMembers()
-        {/*
-            // Create Member object
-            var newMember = new _Member { Id = 1, Firstname = "Mike", Surname = " Jack", Username = "MikeJack", Password = "Password1" };
-            // Add heroes to database
-            _context.Members.Add(newMember);
-            _context.SaveChanges();
-            // Request for the Member we just created
-            var response = await _client.GetAsync($"/Members/{newMember.Id}");
+        {
+            string member = "NM-000001";
+           
+            var response = await _client.GetAsync($"api/Member/{member}");
             // Check if status code is OK
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            // Get JSON  of the hero from response
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            // Deserialize response JSON to Members class
-            var heroResponse = JsonConvert.DeserializeObject<Members>(jsonResponse);
-            // Check if the Member is the same
-            Assert.AreEqual(newMember.Id, heroResponse.Id);
-            Assert.AreEqual(newMember.Firstname, heroResponse.FirstName);*/
+           
         }
 
 

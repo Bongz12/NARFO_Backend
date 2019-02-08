@@ -17,8 +17,8 @@ using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("api/member")]
-   
+    [Route("api/Member")]
+    
     public class MembersController : ControllerBase
     {
         private readonly narfoContext _context;
@@ -114,6 +114,53 @@ namespace NARFO_BE.Controllers
             var amembers = await _context.Member.FindAsync(id); //gets the member with matching id
             if (amembers == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }//fail response 
             return Ok(new { status = "success", members = amembers });//success response
+        }
+
+        [HttpPost("verify/username")]
+        public async Task<ActionResult<Member>> VerifyUsername([FromBody]Member Member)
+        {
+            Member user = null;
+            if (Member.Username != null)
+            {
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Username == Member.Username);
+                if (user != null)
+                {
+                    return Ok(new { status = "success", field = "user already exists" });
+                }
+                else
+                {
+                    return Ok(new { status = "success", field = "Ok" });
+                }
+
+            }
+            else
+            {
+                return BadRequest(new { status = "failed", error = "The email field is empty" });
+            }
+        }
+
+
+
+        [HttpPost("verify/email")]
+        public async Task<ActionResult<Member>>  VerifyUser([FromBody]Member Member)
+        {
+            Member user = null;
+            if(Member.Email !=  null)
+            {
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Email == Member.Email);
+                if(user != null)
+                {
+                    return Ok(new { status = "success", field ="user already exists" });
+                }
+                else
+                {
+                    return Ok(new { status = "success", field = "Ok" });
+                }
+
+            }else
+            {
+                return BadRequest(new { status = "failed", error = "The email field is empty" });
+            } 
         }
 
         [HttpPost("post/set")]
