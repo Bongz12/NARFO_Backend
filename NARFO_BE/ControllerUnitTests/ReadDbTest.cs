@@ -7,7 +7,7 @@ using System.Text;
 namespace ControllerUnitTests
 {
     class ReadDbTest
-    {
+    {/*
         private ReadFromDb read;
 
         public ReadDbTest()
@@ -24,5 +24,6 @@ namespace ControllerUnitTests
             //Assert
             Assert.AreEqual("Johann Heinrich", readTest);
         }
+        */
     }
 }
