@@ -135,7 +135,7 @@ namespace NARFO_BE.Controllers
             }
             else
             {
-                return BadRequest(new { status = "failed", error = "The email field is empty" });
+                return BadRequest(new { status = "failed", error = "The username field is empty" });
             }
         }
 
