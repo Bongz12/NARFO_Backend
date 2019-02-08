@@ -54,7 +54,7 @@ namespace Tests
             */
             string member = "NM-000001";
             string name = "Johann Heirich";
-            var response = await _client.GetAsync($"api/Member/get/{member}");
+            var response = await _client.GetAsync($"api/Member/{member}");
             // Check if status code is OK
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             // Get JSON  of the hero from response
@@ -62,8 +62,8 @@ namespace Tests
             // Deserialize response JSON to Members class
             var heroResponse = JsonConvert.DeserializeObject<Member>(jsonResponse);
             // Check if the Member is the same
-            Assert.AreEqual(newMember.Id, heroResponse.Id);
-            Assert.AreEqual(newMember.Firstname, heroResponse.FirstName);*/
+            //Assert.AreEqual(newMember.Id, heroResponse.Id);
+           // Assert.AreEqual(newMember.Firstname, heroResponse.FirstName);
         }
 
 
