@@ -60,7 +60,7 @@ namespace NARFO_BE.Controllers
         public async Task<ActionResult<Member>> Login([FromBody] Member model)
         {
             Member user = null;
-            if(model.Email != null)
+            if(model.Email.Any())
             {
                 user = await _context.Member.FirstOrDefaultAsync(member => member.Email == model.Email && Encryption.VerifyPassword(model.Password, member.Password));
             }else
@@ -135,7 +135,7 @@ namespace NARFO_BE.Controllers
             }
             else
             {
-                return BadRequest(new { status = "failed", error = "The email field is empty" });
+                return BadRequest(new { status = "failed", error = "The username field is empty" });
             }
         }
 
