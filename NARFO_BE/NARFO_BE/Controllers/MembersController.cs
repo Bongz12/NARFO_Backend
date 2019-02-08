@@ -116,6 +116,53 @@ namespace NARFO_BE.Controllers
             return Ok(new { status = "success", members = amembers });//success response
         }
 
+        [HttpPost("verify/username")]
+        public async Task<ActionResult<Member>> VerifyUsername([FromBody]Member Member)
+        {
+            Member user = null;
+            if (Member.Username != null)
+            {
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Username == Member.Username);
+                if (user != null)
+                {
+                    return Ok(new { status = "success", field = "user already exists" });
+                }
+                else
+                {
+                    return Ok(new { status = "success", field = "Ok" });
+                }
+
+            }
+            else
+            {
+                return BadRequest(new { status = "failed", error = "The email field is empty" });
+            }
+        }
+
+
+
+        [HttpPost("verify/email")]
+        public async Task<ActionResult<Member>>  VerifyUser([FromBody]Member Member)
+        {
+            Member user = null;
+            if(Member.Email !=  null)
+            {
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Email == Member.Email);
+                if(user != null)
+                {
+                    return Ok(new { status = "success", field ="user already exists" });
+                }
+                else
+                {
+                    return Ok(new { status = "success", field = "Ok" });
+                }
+
+            }else
+            {
+                return BadRequest(new { status = "failed", error = "The email field is empty" });
+            } 
+        }
+
         [HttpPost("post/set")]
         public async Task<ActionResult<Member>> setMember([FromBody]Member member)
         {
