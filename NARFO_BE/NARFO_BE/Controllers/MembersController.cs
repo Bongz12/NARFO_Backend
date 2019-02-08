@@ -58,8 +58,16 @@ namespace NARFO_BE.Controllers
         [HttpPost("post/login")]
         public async Task<ActionResult <Member>> Login([FromBody] Member model)
         {
+            Member user = null;
+            if(model.Email != null)
+            {
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Email == model.Email && Encryption.VerifyPassword(model.Password, member.Password));
+            }else
+            {
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Username == model.Username && Encryption.VerifyPassword(model.Password,member.Password));
+            }
            
-           Member user = await _context.Member.FirstOrDefaultAsync(member => member.Email == model.Email && member.Password == encryption.HashPassword(model.Password));
+           
                 if(user == null)
                 {
                     return BadRequest(new { status = "Failed", message = "Invalid Login"});
@@ -70,7 +78,7 @@ namespace NARFO_BE.Controllers
                 }
      }
 
-        // GET: Member/Email
+        
         [HttpGet("all/user")]
         public  async Task<ActionResult<MemberPrototype>> GetMembersEmail()
         {
@@ -88,23 +96,26 @@ namespace NARFO_BE.Controllers
         }
        
         [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<Member>>> GetMembers() {return await _context.Member.ToListAsync();}
+        public async Task<ActionResult<IEnumerable<Member>>> GetMembers() {
+            return await _context.Member.ToListAsync();
+        }
      
         [HttpGet("{id}")]
-        public async Task<ActionResult<Member>> GetMembers(int id){
-            var amembers = await _context.Member.FindAsync(id);
-            if (amembers == null)
+        public async Task<ActionResult<Member>> GetMembers(string id){
+            var Members = await _context.Member.FindAsync(id);
+            if (Members == null)
             {
                 return BadRequest(new { status = "failed", error = "Failed to connect" });
             }
-            return Ok(new { status = "success", members = amembers });
+            return Ok(new { status = "success", members = Members });
         }
-  
+      
+
        [HttpPost("post/set")]
 
        public async Task<ActionResult<Member>> SetMember([FromBody]Member member)
         {
-            member.Password = encryption.HashPassword(member.Password);
+            member.Password = Encryption.CreatePasswordHash(member.Password);
             await _context.Member.AddAsync(member);
             await _context.SaveChangesAsync();         
             if (members == null)
