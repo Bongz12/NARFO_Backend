@@ -44,56 +44,15 @@ namespace Tests
         [TestCase]
         public async Task GetAllMembers_ShouldReturnAllMembers()
         {
-            // Create Member object
-            var newMember = new Members { Id = 1, FirstName = "Mike", LastName = " Jack", Username = "MikeJack", Password = "Password1" };
-
-
-            // Add heroes to database
-            _context.Members.Add(newMember);
-            _context.SaveChanges();
-
-           // _context.Members.Add(newMember);
-            //_context.SaveChanges();
-
-            // Request for the Member we just created
-            var response = await _client.GetAsync($"/api/Members/{newMember.Id}");
+            string member = "NM-000001";
+           
+            var response = await _client.GetAsync($"api/Member/{member}");
             // Check if status code is OK
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            // Get JSON  of the hero from response
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            // Deserialize response JSON to Members class
-            var heroResponse = JsonConvert.DeserializeObject<Members>(jsonResponse);
-            // Check if the Member is the same
-            Assert.AreEqual(newMember.Id, heroResponse.Id);
-            Assert.AreEqual(newMember.FirstName, heroResponse.FirstName);
+           
         }
 
 
-        /*
-
-        [TestCase]
-        public void GetAllMembers_ShouldReturnAllMembers()
-        {
-            var testMembers = GetTestMembers();
-
-            var controller = new MembersController(_context);
-            controller.ListofMembers(testMembers);
-
-
-            var result = controller.GetAllMembers() as List<Members>;
-            Assert.AreEqual(testMembers.Count, result.Count);
-        }
-        private List<Members> GetTestMembers()
-        {
-            var testMembers = new List<Members>();
-            testMembers.Add(new Members { Id = 1, FirstName = "Mike", LastName =" Jack" , Username = "MikeJack", Password = "Password1" });
-            testMembers.Add(new Members { Id = 2, FirstName = "Mike2", LastName = " Take", Username = "MikeJack2", Password = "Password1" });
-            testMembers.Add(new Members { Id = 3, FirstName = "Mike3", LastName = " Late", Username = "MikeJack3", Password = "Password1" });
-            testMembers.Add(new Members { Id = 4, FirstName = "Mike4", LastName = " Nate", Username = "MikeJack4", Password = "Password1" });
-
-            return testMembers;
-        }
-        */
 
     }
 }
