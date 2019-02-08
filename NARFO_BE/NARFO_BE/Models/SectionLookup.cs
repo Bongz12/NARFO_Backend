@@ -5,7 +5,7 @@ namespace NARFO_BE.Models
 {
     public partial class SectionLookup
     {
-        public int SectionLookupId { get; set; }
+        public int SectionLookUpId { get; set; }
         public string Section { get; set; }
     }
 }

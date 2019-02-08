@@ -21,6 +21,7 @@ namespace NARFO_BE.Models
         public virtual DbSet<Administrator> Administrator { get; set; }
         public virtual DbSet<ApplicationLookup> ApplicationLookup { get; set; }
         public virtual DbSet<BankDetails> BankDetails { get; set; }
+        public virtual DbSet<Branch> Branch { get; set; }
         public virtual DbSet<Club> Club { get; set; }
         public virtual DbSet<Comission> Comission { get; set; }
         public virtual DbSet<CommissionStructure> CommissionStructure { get; set; }
@@ -29,7 +30,6 @@ namespace NARFO_BE.Models
         public virtual DbSet<Dslookup> Dslookup { get; set; }
         public virtual DbSet<Endorsement> Endorsement { get; set; }
         public virtual DbSet<FireArmType> FireArmType { get; set; }
-        public virtual DbSet<Login> Login { get; set; }
         public virtual DbSet<Member> Member { get; set; }
         public virtual DbSet<MemberTypeLookUp> MemberTypeLookUp { get; set; }
         public virtual DbSet<Outlets> Outlets { get; set; }
@@ -39,6 +39,7 @@ namespace NARFO_BE.Models
         public virtual DbSet<SalesReps> SalesReps { get; set; }
         public virtual DbSet<SectionLookup> SectionLookup { get; set; }
         public virtual DbSet<Transaction> Transaction { get; set; }
+        public virtual DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -55,7 +56,9 @@ namespace NARFO_BE.Models
 
             modelBuilder.Entity<Action>(entity =>
             {
-                entity.Property(e => e.ActionId).HasColumnName("ActionID");
+                entity.Property(e => e.ActionId)
+                    .HasColumnName("ActionID")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Action1)
                     .HasColumnName("Action")
@@ -173,6 +176,16 @@ namespace NARFO_BE.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ContactNumber).HasColumnType("numeric(10, 0)");
+            });
+
+            modelBuilder.Entity<Branch>(entity =>
+            {
+                entity.HasKey(e => e.Branch1);
+
+                entity.Property(e => e.Branch1)
+                    .HasColumnName("Branch")
+                    .HasMaxLength(255)
+                    .ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Club>(entity =>
@@ -467,26 +480,6 @@ namespace NARFO_BE.Models
                     .ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<Login>(entity =>
-            {
-                entity.HasKey(e => e.Email);
-
-                entity.Property(e => e.Email)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.LoginId).HasColumnName("LoginID");
-
-                entity.Property(e => e.Password)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Username)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<Member>(entity =>
             {
                 entity.HasKey(e => e.MemNo);
@@ -533,8 +526,6 @@ namespace NARFO_BE.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.InceptionDate).HasColumnType("date");
-
-                entity.Property(e => e.LoginId).HasColumnName("LoginID");
 
                 entity.Property(e => e.MemType)
                     .HasMaxLength(20)
@@ -606,12 +597,6 @@ namespace NARFO_BE.Models
                     .HasForeignKey(d => d.ClubId)
                     .HasConstraintName("FK_Member_Club");
 
-                entity.HasOne(d => d.EmailNavigation)
-                    .WithMany(p => p.Member)
-                    .HasForeignKey(d => d.Email)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Member_Login");
-
                 entity.HasOne(d => d.OwnerNavigation)
                     .WithMany(p => p.Member)
                     .HasForeignKey(d => d.Owner)
@@ -646,6 +631,8 @@ namespace NARFO_BE.Models
                 entity.Property(e => e.Email)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Outlet).HasMaxLength(120);
 
                 entity.Property(e => e.PostalCode).HasColumnType("numeric(6, 0)");
 
@@ -745,19 +732,19 @@ namespace NARFO_BE.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.MemNo)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.MemNoNavigation)
                     .WithMany(p => p.SalesReps)
                     .HasForeignKey(d => d.MemNo)
-                    .HasConstraintName("FKSalesReps_Member");
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SalesReps_Member");
             });
 
             modelBuilder.Entity<SectionLookup>(entity =>
             {
-                entity.Property(e => e.SectionLookupId).HasColumnName("SectionLookupID");
-
                 entity.Property(e => e.Section).HasMaxLength(255);
             });
 
@@ -828,6 +815,37 @@ namespace NARFO_BE.Models
                     .HasForeignKey(d => d.PaymentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Transaction_Payment");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.AccountStatus).HasMaxLength(255);
+
+                entity.Property(e => e.DisplayName).HasMaxLength(255);
+
+                entity.Property(e => e.Email).HasMaxLength(255);
+
+                entity.Property(e => e.Ethnicity).HasMaxLength(255);
+
+                entity.Property(e => e.Gender).HasMaxLength(255);
+
+                entity.Property(e => e.Lastname).HasMaxLength(255);
+
+                entity.Property(e => e.Name).HasMaxLength(255);
+
+                entity.Property(e => e.Registered).HasColumnType("datetime");
+
+                entity.Property(e => e.Role).HasMaxLength(255);
+
+                entity.Property(e => e.SalesRep).HasMaxLength(255);
+
+                entity.Property(e => e.Tak).HasMaxLength(255);
+
+                entity.Property(e => e.Username).HasMaxLength(255);
             });
         }
     }

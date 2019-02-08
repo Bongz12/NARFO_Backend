@@ -17,8 +17,8 @@ using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("Member")]
-    [EnableCors("MyPolicy")]
+    [Route("api/Member")]
+    
     public class MembersController : ControllerBase
     {
         private readonly narfoContext _context;
@@ -28,97 +28,156 @@ namespace NARFO_BE.Controllers
         {
             Config = config;
             _context = context;
-            
+
+        }
+        
+      
+        private ActionResult<Member> Json(object p) {
+            throw new NotImplementedException();
         }
 
-        public IEnumerable<Member> GetAllMembers() { return members; }
-      private bool MembersExists(String MemNo) { return _context.Member.Any(member => member.MemNo == MemNo); }
-        public void ListofMembers(List<Member> members) {this.members = members; }
-        private ActionResult<Member> Json(object p) { throw new NotImplementedException(); }
-
-
-       
         private string BuildToken(Member user)
-
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
-       new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-       new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
     };
             var token = new JwtSecurityToken(Config["Jwt:Issuer"],
-              Config["Jwt:Issuer"],claims,
+              Config["Jwt:Issuer"], claims,
               expires: DateTime.Now.AddDays(360),
               signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        //
+ 
 
         // POST: /Account/Login
         [HttpPost("post/login")]
-        public async Task<ActionResult <Member>> Login([FromBody] Member model)
+        public async Task<ActionResult<Member>> Login([FromBody] Member model)
         {
-
-            Member user = await _context.Member.FirstOrDefaultAsync(member=>member.Email == model.Email && member.Password == encryption.HashPassword(model.Password));
-            
-            if (user == null)
+            Member user = null;
+            if(model.Email.Any())
             {
-                return BadRequest(new { status = "Failed", message = "Invalid login" });
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Email == model.Email && Encryption.VerifyPassword(model.Password, member.Password));
+            }else
+            {
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Username == model.Username && Encryption.VerifyPassword(model.Password,member.Password));
             }
-            else {
-                var tokenString = BuildToken(user);
-
-                return Ok(new { status = "Success", token = tokenString });
-            }
-
-        }
-
-
-        // GET: Member/Email
-        [HttpGet("get/all/user")]
+                if(user == null)
+                {
+                    return BadRequest(new { status = "Failed", message = "Invalid Login"});
+                } else
+                {
+                    var tokenString = BuildToken(user);
+                    return Ok(new { status = "Success", token = tokenString });
+                }
+     }
+     
+        [HttpGet("all/user")]
         public  async Task<ActionResult<MemberPrototype>> GetMembersEmail()
         {
             List<MemberPrototype> endpoint = new List<MemberPrototype>();
-            foreach (Member d in  await _context.Member.ToArrayAsync())
+            foreach (Member member in  await _context.Member.ToArrayAsync())
             {
-                if(d.Username !=  null && d.Email != null )
-               endpoint.Add(new MemberPrototype(d.Username,d.Email));       
+               if(member.Username !=  null && member.Email != null )
+               endpoint.Add(new MemberPrototype(member.Username,member.Email));       
             }
-            if(endpoint == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }
+            if(endpoint == null)
+            {
+                return BadRequest(new { status = "failed", error = "Failed to connect" });
+            }
           return      Ok(new { status = "success", members=endpoint });
         }
        
-        [HttpGet("get/all")]
-        public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
-        {
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<Member>>> GetMembers() {
             return await _context.Member.ToListAsync();
         }
      
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Member>> GetMembers(string id){
+            var Members = await _context.Member.FindAsync(id);
+            if (Members == null)
+            {
+                return BadRequest(new { status = "failed", error = "Failed to connect" });
+            }
+            return Ok(new { status = "success", members = Members });
+        }
+ 
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<Member>> GetMembers(int id){
+        public async Task<ActionResult<Member>> GetMembers(int id)
+        {
             var amembers = await _context.Member.FindAsync(id); //gets the member with matching id
-            if (amembers == null){return BadRequest(new { status = "failed", error = "Failed to connect" }); }//fail response 
+            if (amembers == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }//fail response 
             return Ok(new { status = "success", members = amembers });//success response
         }
-  
-       [HttpPost("post/set")]
 
-       public async Task<ActionResult<Member>> setMember([FromBody]Member member)
+        [HttpPost("verify/username")]
+        public async Task<ActionResult<Member>> VerifyUsername([FromBody]Member Member)
         {
-            member.Password = encryption.HashPassword(member.Password);//hashing the passsword
-            await _context.Member.AddAsync(member);
-            await _context.SaveChangesAsync();         
-            if (members == null) {
-             return BadRequest(new { status = "failed", error = "Failed to connect" }); }
-            var tokenString = BuildToken(member);
-            return Ok(new { status = "success", token = tokenString });
+            Member user = null;
+            if (Member.Username != null)
+            {
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Username == Member.Username);
+                if (user != null)
+                {
+                    return Ok(new { status = "success", field = "user already exists" });
+                }
+                else
+                {
+                    return Ok(new { status = "success", field = "Ok" });
+                }
 
+            }
+            else
+            {
+                return BadRequest(new { status = "failed", error = "The username field is empty" });
+            }
         }
 
-       
+
+
+        [HttpPost("verify/email")]
+        public async Task<ActionResult<Member>>  VerifyUser([FromBody]Member Member)
+        {
+            Member user = null;
+            if(Member.Email !=  null)
+            {
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Email == Member.Email);
+                if(user != null)
+                {
+                    return Ok(new { status = "success", field ="user already exists" });
+                }
+                else
+                {
+                    return Ok(new { status = "success", field = "Ok" });
+                }
+
+            }else
+            {
+                return BadRequest(new { status = "failed", error = "The email field is empty" });
+            } 
+        }
+
+        [HttpPost("post/set")]
+        public async Task<ActionResult<Member>> setMember([FromBody]Member member)
+        {
+            member.Password = Encryption.CreatePasswordHash(member.Password);
+            await _context.Member.AddAsync(member);
+
+            await _context.SaveChangesAsync();         
+            if (members == null)
+            {
+             return BadRequest(new { status = "failed", error = "Failed to connect" });
+            }
+            var tokenString = BuildToken(member);
+            return Ok(new { status = "success", token = tokenString });
+        }
+
+
     }
 }
