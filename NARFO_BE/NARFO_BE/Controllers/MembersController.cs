@@ -107,31 +107,7 @@ namespace NARFO_BE.Controllers
             }
             return Ok(new { status = "success", members = Members });
         }
-      
-
-     
-
-
-        // GET: Member/Email
-        [HttpGet("get/all/user")]
-        public async Task<ActionResult<MemberPrototype>> GetMembersEmail()
-        {
-            List<MemberPrototype> endpoint = new List<MemberPrototype>();
-            foreach (Member d in await _context.Member.ToArrayAsync())
-            {
-                if (d.Username != null && d.Email != null)
-                    endpoint.Add(new MemberPrototype(d.Username, d.Email));
-            }
-            if (endpoint == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }
-            return Ok(new { status = "success", members = endpoint });
-        }
-
-        [HttpGet("get/all")]
-        public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
-        {
-            return await _context.Member.ToListAsync();
-        }
-
+ 
         [HttpGet("get/{id}")]
         public async Task<ActionResult<Member>> GetMembers(int id)
         {
