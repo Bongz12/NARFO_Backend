@@ -21,6 +21,7 @@ namespace NARFO_BE.Models
         public virtual DbSet<Administrator> Administrator { get; set; }
         public virtual DbSet<ApplicationLookup> ApplicationLookup { get; set; }
         public virtual DbSet<BankDetails> BankDetails { get; set; }
+        public virtual DbSet<Branch> Branch { get; set; }
         public virtual DbSet<Club> Club { get; set; }
         public virtual DbSet<Comission> Comission { get; set; }
         public virtual DbSet<CommissionStructure> CommissionStructure { get; set; }
@@ -175,6 +176,16 @@ namespace NARFO_BE.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ContactNumber).HasColumnType("numeric(10, 0)");
+            });
+
+            modelBuilder.Entity<Branch>(entity =>
+            {
+                entity.HasKey(e => e.Branch1);
+
+                entity.Property(e => e.Branch1)
+                    .HasColumnName("Branch")
+                    .HasMaxLength(255)
+                    .ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Club>(entity =>
@@ -621,6 +632,8 @@ namespace NARFO_BE.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Outlet).HasMaxLength(120);
+
                 entity.Property(e => e.PostalCode).HasColumnType("numeric(6, 0)");
 
                 entity.Property(e => e.TellNumber).HasColumnType("numeric(10, 0)");
@@ -719,12 +732,14 @@ namespace NARFO_BE.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.MemNo)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.MemNoNavigation)
                     .WithMany(p => p.SalesReps)
                     .HasForeignKey(d => d.MemNo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SalesReps_Member");
             });
 
