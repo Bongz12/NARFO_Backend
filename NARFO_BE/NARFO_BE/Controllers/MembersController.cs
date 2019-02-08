@@ -18,7 +18,7 @@ using NARFO_BE.Models;
 namespace NARFO_BE.Controllers
 {
     [Route("api/Member")]
-    [EnableCors("MyPolicy")]
+    
     public class MembersController : ControllerBase
     {
         private readonly narfoContext _context;
@@ -30,9 +30,7 @@ namespace NARFO_BE.Controllers
             _context = context;
             
         }
-        public IEnumerable<Member> GetAllMembers() { return members; }
-      private bool MembersExists(String MemNo) { return _context.Member.Any(member => member.MemNo == MemNo); }
-        public void ListofMembers(List<Member> members) {this.members = members; }
+      
         private ActionResult<Member> Json(object p) { throw new NotImplementedException(); }
 
 
@@ -75,8 +73,8 @@ namespace NARFO_BE.Controllers
 
         }
 
-        // GET: Member/Email
-        [HttpGet("get/all/user")]
+       
+        [HttpGet("all/user")]
         public  async Task<ActionResult<MemberPrototype>> GetMembersEmail()
         {
             List<MemberPrototype> endpoint = new List<MemberPrototype>();
@@ -89,13 +87,13 @@ namespace NARFO_BE.Controllers
           return      Ok(new { status = "success", members=endpoint });
         }
        
-        [HttpGet("get/all")]
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
         {
             return await _context.Member.ToListAsync();
         }
      
-        [HttpGet("get/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Member>> GetMembers(string id){
             var amembers = await _context.Member.FindAsync(id); //gets the member with matching id
             if (amembers == null){return BadRequest(new { status = "failed", error = "Failed to connect" }); }//fail response 
