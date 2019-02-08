@@ -17,8 +17,8 @@ using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("Member")]
-    [EnableCors("MyPolicy")]
+    [Route("api/member")]
+   
     public class MembersController : ControllerBase
     {
         private readonly narfoContext _context;
@@ -30,20 +30,19 @@ namespace NARFO_BE.Controllers
             _context = context;
 
         }
-        public IEnumerable<Member> GetAllMembers() { return members; }
-        private bool MembersExists(String MemNo) { return _context.Member.Any(member => member.MemNo == MemNo); }
-        public void ListofMembers(List<Member> members) { this.members = members; }
-        private ActionResult<Member> Json(object p) { throw new NotImplementedException(); }
-
-
+        
+      
+        private ActionResult<Member> Json(object p) {
+            throw new NotImplementedException();
+        }
 
         private string BuildToken(Member user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
-       new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-       new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
     };
             var token = new JwtSecurityToken(Config["Jwt:Issuer"],
@@ -54,48 +53,61 @@ namespace NARFO_BE.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        //
+ 
 
         // POST: /Account/Login
         [HttpPost("post/login")]
         public async Task<ActionResult<Member>> Login([FromBody] Member model)
         {
-
-            Member user = await _context.Member.FirstOrDefaultAsync(member => member.Email == model.Email && member.Password == encryption.HashPassword(model.Password));
-
-            if (user == null)
+            Member user = null;
+            if(model.Email != null)
             {
-                return BadRequest(new { status = "Failed", message = "Invalid login" });
-            }
-            else
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Email == model.Email && Encryption.VerifyPassword(model.Password, member.Password));
+            }else
             {
-                var tokenString = BuildToken(user);
-
-                return Ok(new { status = "Success", token = tokenString });
+                user = await _context.Member.FirstOrDefaultAsync(member => member.Username == model.Username && Encryption.VerifyPassword(model.Password,member.Password));
             }
-
-        }
-
-        // GET: Member/Email
-        [HttpGet("get/all/user")]
-        public async Task<ActionResult<MemberPrototype>> GetMembersEmail()
+                if(user == null)
+                {
+                    return BadRequest(new { status = "Failed", message = "Invalid Login"});
+                } else
+                {
+                    var tokenString = BuildToken(user);
+                    return Ok(new { status = "Success", token = tokenString });
+                }
+     }
+     
+        [HttpGet("all/user")]
+        public  async Task<ActionResult<MemberPrototype>> GetMembersEmail()
         {
             List<MemberPrototype> endpoint = new List<MemberPrototype>();
-            foreach (Member d in await _context.Member.ToArrayAsync())
+            foreach (Member member in  await _context.Member.ToArrayAsync())
             {
-                if (d.Username != null && d.Email != null)
-                    endpoint.Add(new MemberPrototype(d.Username, d.Email));
+               if(member.Username !=  null && member.Email != null )
+               endpoint.Add(new MemberPrototype(member.Username,member.Email));       
             }
-            if (endpoint == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }
-            return Ok(new { status = "success", members = endpoint });
+            if(endpoint == null)
+            {
+                return BadRequest(new { status = "failed", error = "Failed to connect" });
+            }
+          return      Ok(new { status = "success", members=endpoint });
         }
-
-        [HttpGet("get/all")]
-        public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
-        {
+       
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<Member>>> GetMembers() {
             return await _context.Member.ToListAsync();
         }
-
+     
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Member>> GetMembers(string id){
+            var Members = await _context.Member.FindAsync(id);
+            if (Members == null)
+            {
+                return BadRequest(new { status = "failed", error = "Failed to connect" });
+            }
+            return Ok(new { status = "success", members = Members });
+        }
+ 
         [HttpGet("get/{id}")]
         public async Task<ActionResult<Member>> GetMembers(int id)
         {
@@ -105,19 +117,18 @@ namespace NARFO_BE.Controllers
         }
 
         [HttpPost("post/set")]
-
         public async Task<ActionResult<Member>> setMember([FromBody]Member member)
         {
-            member.Password = encryption.HashPassword(member.Password);//hashing the passsword
+            member.Password = Encryption.CreatePasswordHash(member.Password);
             await _context.Member.AddAsync(member);
-            await _context.SaveChangesAsync();
+
+            await _context.SaveChangesAsync();         
             if (members == null)
             {
-                return BadRequest(new { status = "failed", error = "Failed to connect" });
+             return BadRequest(new { status = "failed", error = "Failed to connect" });
             }
             var tokenString = BuildToken(member);
             return Ok(new { status = "success", token = tokenString });
-
         }
 
 
