@@ -17,8 +17,8 @@ using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("api/member")]
-   
+    [Route("api/Member")]
+    
     public class MembersController : ControllerBase
     {
         private readonly narfoContext _context;

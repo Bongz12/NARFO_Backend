@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+//using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NARFO_BE.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("salesReps")]
+    [Route("api/salesReps")]
+    [EnableCors("MyPolicy")]
     public class SalesRepsController : ControllerBase
     {
         private readonly narfoContext _context;
@@ -43,8 +46,9 @@ namespace NARFO_BE.Controllers
 
             foreach (SalesReps _Sales in await _context.SalesReps.ToArrayAsync())
             {
-                if (_Sales.MemNoNavigation.Firstname!= null && _Sales.MemNoNavigation.Surname != null)
-                    salesRepslist.Add(new SalesRepsPrototype(_Sales.MemNoNavigation.Firstname, _Sales.MemNoNavigation.Surname));
+                var member = await _context.Member.FindAsync(_Sales.MemNo);
+                if (member.Firstname!= null && member.Surname != null)
+                    salesRepslist.Add(new SalesRepsPrototype(member.Firstname, member.Surname));
             }
             if (salesRepslist == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }
             return Ok(new { status = "success", members = salesRepslist });
