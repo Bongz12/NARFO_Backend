@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NARFO_BE.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace NARFO_BE.Controllers
 {
     [Route("api/salesReps")]
+    [EnableCors("MyPolicy")]
     public class SalesRepsController : ControllerBase
     {
         private readonly narfoContext _context;
