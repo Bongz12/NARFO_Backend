@@ -34,10 +34,8 @@ namespace NARFO_BE.Controllers
             var action = await _context.Action.FindAsync(id);
 
             if (action == null)
-            {
-                return NotFound();
-            }
-
+            return NotFound();
+            
             return action;
         }
 
@@ -46,9 +44,7 @@ namespace NARFO_BE.Controllers
         public async Task<IActionResult> PutAction(int id, Models.Action action)
         {
             if (id != action.ActionId)
-            {
-                return BadRequest();
-            }
+            return BadRequest();
 
             _context.Entry(action).State = EntityState.Modified;
 
@@ -87,9 +83,7 @@ namespace NARFO_BE.Controllers
         {
             var action = await _context.Action.FindAsync(id);
             if (action == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
 
             _context.Action.Remove(action);
             await _context.SaveChangesAsync();
