@@ -9,6 +9,6 @@ namespace NARFO_BE.Models
     {
         public string Username { get; set; }
         public string Email { get; set; }
-        public MemberPrototype(String Username, String Email) { this.Email = Email; this.Username = Username;}//constructor
+        public MemberPrototype(String Username, String Email) { this.Email = Email; this.Username = Username; }//constructor
     }
 }
