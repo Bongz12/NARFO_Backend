@@ -28,6 +28,7 @@ namespace NARFO_BE.Controllers
         {
             Config = config;
             _context = context;
+
         }
         
       
@@ -45,18 +46,18 @@ namespace NARFO_BE.Controllers
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
     };
             var token = new JwtSecurityToken(Config["Jwt:Issuer"],
-              Config["Jwt:Issuer"],claims,
+              Config["Jwt:Issuer"], claims,
               expires: DateTime.Now.AddDays(360),
               signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        //
+ 
 
         // POST: /Account/Login
         [HttpPost("post/login")]
-        public async Task<ActionResult <Member>> Login([FromBody] Member model)
+        public async Task<ActionResult<Member>> Login([FromBody] Member model)
         {
             Member user = null;
             if(model.Email != null)
@@ -66,8 +67,6 @@ namespace NARFO_BE.Controllers
             {
                 user = await _context.Member.FirstOrDefaultAsync(member => member.Username == model.Username && Encryption.VerifyPassword(model.Password,member.Password));
             }
-           
-           
                 if(user == null)
                 {
                     return BadRequest(new { status = "Failed", message = "Invalid Login"});
@@ -77,8 +76,7 @@ namespace NARFO_BE.Controllers
                     return Ok(new { status = "Success", token = tokenString });
                 }
      }
-
-        
+     
         [HttpGet("all/user")]
         public  async Task<ActionResult<MemberPrototype>> GetMembersEmail()
         {
@@ -111,12 +109,43 @@ namespace NARFO_BE.Controllers
         }
       
 
-       [HttpPost("post/set")]
+     
 
-       public async Task<ActionResult<Member>> SetMember([FromBody]Member member)
+
+        // GET: Member/Email
+        [HttpGet("get/all/user")]
+        public async Task<ActionResult<MemberPrototype>> GetMembersEmail()
+        {
+            List<MemberPrototype> endpoint = new List<MemberPrototype>();
+            foreach (Member d in await _context.Member.ToArrayAsync())
+            {
+                if (d.Username != null && d.Email != null)
+                    endpoint.Add(new MemberPrototype(d.Username, d.Email));
+            }
+            if (endpoint == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }
+            return Ok(new { status = "success", members = endpoint });
+        }
+
+        [HttpGet("get/all")]
+        public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
+        {
+            return await _context.Member.ToListAsync();
+        }
+
+        [HttpGet("get/{id}")]
+        public async Task<ActionResult<Member>> GetMembers(int id)
+        {
+            var amembers = await _context.Member.FindAsync(id); //gets the member with matching id
+            if (amembers == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }//fail response 
+            return Ok(new { status = "success", members = amembers });//success response
+        }
+
+        [HttpPost("post/set")]
+        public async Task<ActionResult<Member>> setMember([FromBody]Member member)
         {
             member.Password = Encryption.CreatePasswordHash(member.Password);
             await _context.Member.AddAsync(member);
+
             await _context.SaveChangesAsync();         
             if (members == null)
             {
@@ -124,9 +153,8 @@ namespace NARFO_BE.Controllers
             }
             var tokenString = BuildToken(member);
             return Ok(new { status = "success", token = tokenString });
-
         }
 
-       
+
     }
 }
