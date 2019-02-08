@@ -11,6 +11,7 @@ namespace NARFO_BE.Models
         }
 
         public int Owner { get; set; }
+        public string Outlet { get; set; }
         public decimal? TellNumber { get; set; }
         public string Email { get; set; }
         public string City { get; set; }

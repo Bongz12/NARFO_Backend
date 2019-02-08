@@ -17,6 +17,7 @@ namespace NARFO_BE.Models
             SalesReps = new HashSet<SalesReps>();
             Transaction = new HashSet<Transaction>();
         }
+
         public string MemNo { get; set; }
         public string Username { get; set; }
         public string Title { get; set; }
