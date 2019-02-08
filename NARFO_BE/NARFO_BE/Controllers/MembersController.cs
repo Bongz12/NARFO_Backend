@@ -96,7 +96,7 @@ namespace NARFO_BE.Controllers
         }
      
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<Member>> GetMembers(int id){
+        public async Task<ActionResult<Member>> GetMembers(string id){
             var amembers = await _context.Member.FindAsync(id); //gets the member with matching id
             if (amembers == null){return BadRequest(new { status = "failed", error = "Failed to connect" }); }//fail response 
             return Ok(new { status = "success", members = amembers });//success response

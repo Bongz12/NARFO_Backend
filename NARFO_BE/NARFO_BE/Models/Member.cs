@@ -63,7 +63,7 @@ namespace NARFO_BE.Models
         public short? PendingRenewal { get; set; }
         public int? ClubId { get; set; }
         public string Password { get; set; }
-        public int? LoginId { get; set; }
+        //public int? LoginId { get; set; }
 
         public virtual Club Club { get; set; }
         public virtual Login EmailNavigation { get; set; }

@@ -29,7 +29,7 @@ namespace NARFO_BE.Models
         public virtual DbSet<Dslookup> Dslookup { get; set; }
         public virtual DbSet<Endorsement> Endorsement { get; set; }
         public virtual DbSet<FireArmType> FireArmType { get; set; }
-        public virtual DbSet<Login> Login { get; set; }
+        //public virtual DbSet<Login> Login { get; set; }
         public virtual DbSet<Member> Member { get; set; }
         public virtual DbSet<MemberTypeLookUp> MemberTypeLookUp { get; set; }
         public virtual DbSet<Outlets> Outlets { get; set; }
@@ -534,7 +534,7 @@ namespace NARFO_BE.Models
 
                 entity.Property(e => e.InceptionDate).HasColumnType("date");
 
-                entity.Property(e => e.LoginId).HasColumnName("LoginID");
+               // entity.Property(e => e.LoginId).HasColumnName("LoginID");
 
                 entity.Property(e => e.MemType)
                     .HasMaxLength(20)
