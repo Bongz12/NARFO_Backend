@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NARFO_BE.Models;
 
-//RetroDavis>>
 namespace NARFO_BE.Controllers
 {
     [Route("api/[controller]")]
