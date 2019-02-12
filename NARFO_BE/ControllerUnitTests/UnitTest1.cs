@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.TestHost;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net;
+using System.Text;
+using System.Collections.Generic;
 
 namespace Tests
 {
@@ -49,6 +51,91 @@ namespace Tests
             var response = await _client.GetAsync($"api/Member/{member}");
             // Check if status code is OK
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+           
+        }
+
+        [TestCase]
+        public async Task registerMember()
+        {
+            string mem = "MN - TESTTEST";
+
+
+            var amembers = await _context.Member.FindAsync(mem);
+            if (amembers != null)
+            {
+                _context.Member.Remove(amembers);
+                await _context.SaveChangesAsync();
+
+            }
+            Member newMember = new Member
+            {
+                MemNo = "MN - TESTTEST",
+                Username = "Nicky_Human",
+                Title = "Mr",
+                Password = Encryption.CreatePasswordHash("testtesttest"),
+                Firstname = "Nicky",
+                Surname = "Human",
+                Idno = null,
+                PhysicalAddress = null,
+                Suburb = null,
+                City = null,
+                Province = null,
+                PostalCode = null,
+                CellNo = null,
+                Email = "testest@smarttaccounting.co.za",
+                MyBonusNo = null,
+                Sex = "â€“",
+                InceptionDate = null,
+                MemType = "Member",
+                Ethinicity = "Black",
+
+
+            };
+            // Add heroes to database
+            _context.Member.Add(newMember);
+            _context.SaveChanges();
+            // Set the value for the expected response (hero with min height)
+
+            var response = await _client.GetAsync($"api/Member/{mem}");
+            // Check if status code is OK
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+        }
+        [TestCase]
+        public async Task loginMember()
+        {
+
+            Member newMember = new Member
+            {
+                MemNo = "MN - TESTTEST",
+                Username = "Nicky_Human",
+                Title = "Mr",
+                Password = Encryption.CreatePasswordHash("testtesttest"),
+                Firstname = "Nicky",
+                Surname = "Human",
+                Idno = null,
+                PhysicalAddress = null,
+                Suburb = null,
+                City = null,
+                Province = null,
+                PostalCode = null,
+                CellNo = null,
+                Email = "testest@smarttaccounting.co.za",
+                MyBonusNo = null,
+                Sex = "–",
+                InceptionDate = null,
+                // ExpiryDate = 2018 - 10 - 26T00 = 00 = 00,
+                MemType = "Member",
+                Ethinicity = "Black",
+
+
+            };
+            string json = JsonConvert.SerializeObject(newMember);
+            StringContent sc = new StringContent(json, Encoding.UTF8, "application/json");
+           HttpClient c = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true });
+            var x =c.PostAsync("http://63.33.184.180/api/Member/post/login/", sc).Result; // returns 200
+          //  _client.BaseAddress;
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, x.StatusCode);
            
         }
 

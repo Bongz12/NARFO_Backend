@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using NARFO_BE.Models;
 namespace NARFO_BE.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [EnableCors("MyPolicy")]
     public class BranchesController : ControllerBase
     {
         private readonly narfoContext _context;
@@ -24,7 +25,22 @@ namespace NARFO_BE.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Branch>>> GetBranch()
         {
-            return await _context.Branch.ToListAsync();
+
+            List<Branch> BranchesList = new List<Branch>();
+
+            foreach (Branch B in await _context.Branch.ToArrayAsync())
+            {
+                var BranchName = await _context.Branch.FindAsync(B.Branch1);
+                if (BranchName != null)
+                    BranchesList.Add(new Branch(BranchName.Branch1));
+            }
+            if (BranchesList == null) { return BadRequest(new { status = "failed", error = "Failed to connect" }); }
+            return Ok(new { status = "success", BranchName = BranchesList });
+
+          //  return await _context.Branch.ToListAsync();
+
+
+
         }
 
         // GET: api/Branches/5
