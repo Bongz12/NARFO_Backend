@@ -53,8 +53,6 @@ namespace NARFO_BE.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
- 
-
         // POST: /Account/Login
         [HttpPost("post/login")]
         public async Task<ActionResult<Member>> Login([FromBody] Member model)
