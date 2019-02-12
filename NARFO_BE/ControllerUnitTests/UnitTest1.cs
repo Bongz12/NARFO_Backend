@@ -84,9 +84,8 @@ namespace Tests
                 CellNo = null,
                 Email = "testest@smarttaccounting.co.za",
                 MyBonusNo = null,
-                Sex = "–",
+                Sex = "â€“",
                 InceptionDate = null,
-                // ExpiryDate = 2018 - 10 - 26T00 = 00 = 00,
                 MemType = "Member",
                 Ethinicity = "Black",
 
