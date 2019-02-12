@@ -52,6 +52,55 @@ namespace Tests
            
         }
 
+        [TestCase]
+        public async Task registerMember()
+        {
+            string mem = "MN - TESTTEST";
+
+
+            var amembers = await _context.Member.FindAsync(mem);
+            if (amembers != null)
+            {
+                _context.Member.Remove(amembers);
+                await _context.SaveChangesAsync();
+
+            }
+            Member newMember = new Member
+            {
+                MemNo = "MN - TESTTEST",
+                Username = "Nicky_Human",
+                Title = "Mr",
+                Password = Encryption.CreatePasswordHash("testtesttest"),
+                Firstname = "Nicky",
+                Surname = "Human",
+                Idno = null,
+                PhysicalAddress = null,
+                Suburb = null,
+                City = null,
+                Province = null,
+                PostalCode = null,
+                CellNo = null,
+                Email = "testest@smarttaccounting.co.za",
+                MyBonusNo = null,
+                Sex = "–",
+                InceptionDate = null,
+                // ExpiryDate = 2018 - 10 - 26T00 = 00 = 00,
+                MemType = "Member",
+                Ethinicity = "Black",
+
+
+            };
+            // Add heroes to database
+            _context.Member.Add(newMember);
+            _context.SaveChanges();
+            // Set the value for the expected response (hero with min height)
+
+            var response = await _client.GetAsync($"api/Member/{mem}");
+            // Check if status code is OK
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+        }
+
 
 
     }
