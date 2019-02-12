@@ -9,7 +9,7 @@ using NARFO_BE.Models;
 
 namespace NARFO_BE.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Pending Renewal")]
     [ApiController]
     public class PendingRenewalsController : ControllerBase
     {
@@ -21,7 +21,7 @@ namespace NARFO_BE.Controllers
         }
 
         // GET: api/PendingRenewals
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<PendingRenewal>>> GetPendingRenewal()
         {
             return await _context.PendingRenewal.ToListAsync();
