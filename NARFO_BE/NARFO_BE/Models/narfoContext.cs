@@ -40,13 +40,15 @@ namespace NARFO_BE.Models
         public virtual DbSet<SectionLookup> SectionLookup { get; set; }
         public virtual DbSet<Transaction> Transaction { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<MyTable> MyTable { get; set; }
+        public virtual DbSet<EndorsementApplication> EndorsementApplication { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=dev.retrotest.co.za;Initial Catalog=narfo;Persist Security Info=False;User ID=group2;Password=jtn8TVNQMW_28esy;");
+                optionsBuilder.UseSqlServer("Server=dev.retrotest.co.za;Initial Catalog=narfo;Persist Security Info=False;User ID=group2;Password='=6}]#,Pm;Qvm2Qt';");
             }
         }
 
