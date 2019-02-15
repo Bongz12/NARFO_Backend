@@ -21,6 +21,8 @@ namespace NARFO_BE
 {
     public class Startup
     {
+        private string _NarfoApiKey = null; //
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,7 +33,9 @@ namespace NARFO_BE
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connection = @"Server=dev.retrotest.co.za;Initial Catalog=narfo;Persist Security Info=False;User ID=group2;Password=jtn8TVNQMW_28esy;";
+            _NarfoApiKey = Configuration["Narfo:ServiceApiKey"]; //
+
+            var connection = @"Server=dev.retrotest.co.za;Initial Catalog=narfo;Persist Security Info=False;User ID=group2;Password='=6}]#,Pm;Qvm2Qt';";
             services.AddDbContext<narfoContext>
                (options => options.UseSqlServer(connection));
 
